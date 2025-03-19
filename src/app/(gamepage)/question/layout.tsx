@@ -26,7 +26,7 @@ export default function GamePageLayout({
           className="w-2 hover:w-3 bg-zinc-400 dark:bg-zinc-800 rounded-lg transition-all cursor-col-resize"
           withHandle
         />
-        <ResizablePanel defaultSize={20} minSize={0} maxSize={35}>
+        <ResizablePanel defaultSize={20} minSize={0} maxSize={100}>
           <div className="flex h-full items-center justify-center p-6">
             <RightSidebar />
           </div>
