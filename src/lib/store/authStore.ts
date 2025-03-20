@@ -63,14 +63,10 @@ supabase.auth.getSession().then(({ data: { session } }) => {
 });
 
 // Listen for auth state changes
+// Listen for auth state changes
 supabase.auth.onAuthStateChange((event, session) => {
-  const { user: currentUser, session: currentSession } = useAuthStore.getState();
-  
-  // Only update if the session has changed
-  if (session?.access_token !== currentSession?.access_token) {
-    console.log("Auth state changed:", event, session);
-    useAuthStore.getState().setUser(session?.user ?? null);
-    useAuthStore.getState().setSession(session ?? null);
-    useAuthStore.getState().setLoading(false);
-  }
+  console.log("Auth state changed:", event, session);
+  useAuthStore.getState().setUser(session?.user ?? null);
+  useAuthStore.getState().setSession(session ?? null);
+  useAuthStore.getState().setLoading(false);
 });
