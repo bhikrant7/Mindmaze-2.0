@@ -24,7 +24,7 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  const { loading, user, setTeam,session, signOut } = useAuthStore();
+  const { loading, user, setTeam, session, signOut } = useAuthStore();
   const router = useRouter();
 
   // Handle login
@@ -49,36 +49,52 @@ export default function LoginPage() {
       console.log("Existing team found. Signing in...");
 
       // Check if the refresh token in the database matches the current session token
-      if (
-        existingTeam.refresh_token
-         &&
-        existingTeam.refresh_token != session?.refresh_token
-      ) {
+      if (existingTeam.refresh_token 
+        && existingTeam.refresh_token !== session?.refresh_token) {
         console.log("Session already exists. Logging out first...");
         // setSessionOverlap(true);
         // Log the user out
         await signOut().then(() => {
           console.log("Logged out successfully");
           // Perform a hard refresh
-          router.replace("/login");
+          // router.replace("/login");
         });
         // return;
       }
 
       // Sign in using Supabase Auth
-      const { error } = await supabase.auth.signInWithPassword({
-        email: teamForm.email,
-        password: teamForm.password,
-      });
+      const { data: signInData, error } =
+        await supabase.auth.signInWithPassword({
+          email: teamForm.email,
+          password: teamForm.password,
+        });
 
       if (error) {
         console.error("Sign in error:", error.message);
         return;
       }
 
+      // Update team's refresh_token with the new session's token
+      const { error: updateError } = await supabase
+        .from("teams")
+        .update({ refresh_token: signInData.session?.refresh_token })
+        .eq("email", teamForm.email);
+
+      if (updateError) {
+        console.error("Failed to update refresh token:", updateError.message);
+        return;
+      }
+
+      // Fetch the updated team data
+      const { data: updatedTeam } = await supabase
+        .from("teams")
+        .select("*")
+        .eq("email", teamForm.email)
+        .single();
+
       // Update Zustand store
       // setUser(data.user);
-      setTeam(existingTeam);
+      setTeam(updatedTeam || existingTeam);
     } else {
       console.log("No team found. Signing up...");
       // Sign up the user with Supabase Auth

@@ -35,23 +35,19 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signOut: async () => {
     try {
-      const { team,user } = useAuthStore.getState();
-
+      const { user } = useAuthStore.getState();
       await supabase.auth.signOut();
 
-      console.log("Signing out user:", user);
-      if (team) {
+      if (user?.email) {
         await supabase
           .from("teams")
           .update({ refresh_token: null })
-          .eq("team_name", team.team_name);
+          .eq("email", user.email);
       }
 
-
       set({ user: null, team: null, session: null });
-      console.log("Signed out successfully:", user );
     } catch (err) {
-      console.error("Error signing out", err);
+      console.error("Error signing out:", err);
       set({ user: null, team: null, session: null });
     }
   },
