@@ -10,6 +10,7 @@ export interface Team {
   current_question_id?: number | 0; //random 4 digit number assign to each team to mark their question answer id
   questions_solved?: number | 0;
   has_submitted?: boolean | false;
+  session_count?: number|0;
 }
 
 

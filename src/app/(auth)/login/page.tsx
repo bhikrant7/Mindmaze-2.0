@@ -25,7 +25,15 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  const { loading, user, setTeam, session, signOut } = useAuthStore();
+  const {
+    loading,
+    user,
+    setTeam,
+    session,
+    signOut,
+    setSessionOverlap,
+    session_overlap,
+  } = useAuthStore();
   const router = useRouter();
 
   // Handle login
@@ -50,25 +58,33 @@ export default function LoginPage() {
       console.log("Existing team found. Signing in...");
 
       // Check if the refresh token in the database matches the current session token
-      if (existingTeam.refresh_token 
-        && existingTeam.refresh_token !== session?.refresh_token) {
+      if (
+        existingTeam.refresh_token &&
+        existingTeam.refresh_token !== session?.refresh_token
+      ) {
         console.log("Session already exists. Logging out first...");
         // setSessionOverlap(true);
         // Log the user out
         await signOut().then(() => {
           console.log("Logged out successfully");
+          setSessionOverlap(existingTeam.email);
+          console.log("session count: ",session_overlap)
           // Perform a hard refresh
           router.replace("/login");
         });
+      }
+      if (session_overlap >= 2) {
+        console.log("Session overlap detected. Block you here...");
+
+        router.replace("/login");
         return;
       }
 
       // Sign in using Supabase Auth
-      const { data: signInData, error } =
-        await supabase.auth.signInWithPassword({
-          email: teamForm.email,
-          password: teamForm.password,
-        });
+      const { error } = await supabase.auth.signInWithPassword({
+        email: teamForm.email,
+        password: teamForm.password,
+      });
 
       if (error) {
         console.error("Sign in error:", error.message);
@@ -76,9 +92,16 @@ export default function LoginPage() {
       }
 
       // Update team's refresh_token with the new session's token
+      const { data: newSession, error: sessionError } =
+        await supabase.auth.getSession();
+      if (sessionError) {
+        console.error("Error fetching session:", sessionError.message);
+        return;
+      }
+
       const { error: updateError } = await supabase
         .from("teams")
-        .update({ refresh_token: signInData.session?.refresh_token })
+        .update({ refresh_token: newSession?.session?.refresh_token })
         .eq("email", teamForm.email);
 
       if (updateError) {
@@ -156,10 +179,10 @@ export default function LoginPage() {
 
   //Redirect to main page if user is authenticated
   useEffect(() => {
-    if (user) {
+    if (user && !loading) {
       router.push("/mainpage");
     }
-  }, [user]);
+  }, [user, loading]);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-cover bg-center bg-no-repeat">
