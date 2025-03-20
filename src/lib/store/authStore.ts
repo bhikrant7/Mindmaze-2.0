@@ -35,7 +35,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         await supabase
           .from("teams")
           .update({ refresh_token: null })
-          .eq("id", team.id);
+          .eq("team_name", team.team_name);
       }
       await supabase.auth.signOut();
       set({ user: null, team: null, session: null });
