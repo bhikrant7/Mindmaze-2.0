@@ -17,7 +17,7 @@ interface AuthState {
   setTeam: (team: Partial<Team> | null) => void;
   setSession: (session: Session | null) => void;
   setLoading: (loading: boolean) => void;
-  setSessionOverlap:(session_overlap:boolean)=>void;
+  setSessionOverlap: (session_overlap: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -25,20 +25,21 @@ export const useAuthStore = create<AuthState>((set) => ({
   team: null,
   loading: true,
   session: null,
-  session_overlap:false,
+  session_overlap: false,
 
   setUser: (user: User | null) => set({ user }),
   setTeam: (team: Partial<Team> | null) => set({ team }),
   setSession: (session: Session | null) => set({ session }),
   setLoading: (loading: boolean) => set({ loading }),
-  setSessionOverlap:(session_overlap:boolean)=>set({session_overlap}),
+  setSessionOverlap: (session_overlap: boolean) => set({ session_overlap }),
 
   signOut: async () => {
     try {
-      const { team } = useAuthStore.getState();
+      const { team,user } = useAuthStore.getState();
 
       await supabase.auth.signOut();
 
+      console.log("Signing out user:", user);
       if (team) {
         await supabase
           .from("teams")
@@ -46,7 +47,9 @@ export const useAuthStore = create<AuthState>((set) => ({
           .eq("team_name", team.team_name);
       }
 
+
       set({ user: null, team: null, session: null });
+      console.log("Signed out successfully:", user );
     } catch (err) {
       console.error("Error signing out", err);
       set({ user: null, team: null, session: null });
@@ -63,10 +66,16 @@ supabase.auth.getSession().then(({ data: { session } }) => {
 });
 
 // Listen for auth state changes
-// Listen for auth state changes
 supabase.auth.onAuthStateChange((event, session) => {
-  console.log("Auth state changed:", event, session);
-  useAuthStore.getState().setUser(session?.user ?? null);
-  useAuthStore.getState().setSession(session ?? null);
-  useAuthStore.getState().setLoading(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { user: currentUser, session: currentSession } =
+    useAuthStore.getState();
+
+  // Only update if the session has changed
+  if (session?.access_token !== currentSession?.access_token) {
+    console.log("Auth state changed:", event, session);
+    useAuthStore.getState().setUser(session?.user ?? null);
+    useAuthStore.getState().setSession(session ?? null);
+    useAuthStore.getState().setLoading(false);
+  }
 });
