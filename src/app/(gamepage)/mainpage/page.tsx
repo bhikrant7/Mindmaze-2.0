@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
+import Image from "next/image"; // Import Next.js Image component
 
 export default function Page() {
   const router = useRouter();
