@@ -92,6 +92,7 @@ export default function LoginPage() {
         return;
       }
 
+
       // Insert new team into the teams table with default values
       const { data: newTeam, error: insertError } = await supabase
         .from("teams")
@@ -103,7 +104,7 @@ export default function LoginPage() {
             current_question_id: 0,
             questions_solved: 0,
             has_submitted: false,
-            refresh_token: session?.refresh_token,
+            refresh_token: authData.session?.refresh_token,
           },
         ])
         .select()
