@@ -6,7 +6,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 export default function Page() {
   const router = useRouter();
   const [completed, setCompleted] = useState<boolean[]>(Array(15).fill(false));
-  const { user } = useAuthStore();
+  const { session_overlap} = useAuthStore();
 
   const toggleCompletion = (index: number) => {
     router.push(`/question/${index + 1}`);
@@ -18,7 +18,7 @@ export default function Page() {
   };
 
   return (
-    user ? (
+    !session_overlap ? (
       <main className="min-h-screen flex flex-col">
         {/* Status Bar */}
         {/* Main Content Area */}
@@ -51,7 +51,7 @@ export default function Page() {
       </main>
     ) : (
       (() => {
-        router.replace("/login");
+        router.push("/login");
         return null; // Ensures the function doesn't return JSX unexpectedly
       })()
     )

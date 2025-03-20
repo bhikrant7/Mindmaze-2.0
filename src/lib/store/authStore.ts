@@ -10,12 +10,14 @@ interface AuthState {
   team: Partial<Team> | null;
   loading: boolean;
   session: Session | null;
+  session_overlap: boolean;
 
   signOut: () => Promise<void>;
   setUser: (user: User | null) => void;
   setTeam: (team: Partial<Team> | null) => void;
   setSession: (session: Session | null) => void;
   setLoading: (loading: boolean) => void;
+  setSessionOverlap:(session_overlap:boolean)=>void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -23,15 +25,20 @@ export const useAuthStore = create<AuthState>((set) => ({
   team: null,
   loading: true,
   session: null,
+  session_overlap:false,
+
   setUser: (user: User | null) => set({ user }),
   setTeam: (team: Partial<Team> | null) => set({ team }),
   setSession: (session: Session | null) => set({ session }),
   setLoading: (loading: boolean) => set({ loading }),
+  setSessionOverlap:(session_overlap:boolean)=>set({session_overlap}),
+
   signOut: async () => {
     try {
       const { team } = useAuthStore.getState();
-      //update the database to insert the refresh_token as null
+
       await supabase.auth.signOut();
+
       if (team) {
         await supabase
           .from("teams")
@@ -47,7 +54,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 }));
 
-//  Initialize authentication state
+// Initialize authentication state
 supabase.auth.getSession().then(({ data: { session } }) => {
   console.log("Initial session:", session);
   useAuthStore.getState().setUser(session?.user ?? null);
@@ -55,10 +62,15 @@ supabase.auth.getSession().then(({ data: { session } }) => {
   useAuthStore.getState().setLoading(false);
 });
 
-//  Listen for auth state changes
+// Listen for auth state changes
 supabase.auth.onAuthStateChange((event, session) => {
-  console.log("Auth state changed:", event, session?.user?.user_metadata);
-  useAuthStore.getState().setUser(session?.user ?? null);
-  useAuthStore.getState().setSession(session ?? null);
-  useAuthStore.getState().setLoading(false);
+  const { user: currentUser, session: currentSession } = useAuthStore.getState();
+  
+  // Only update if the session has changed
+  if (session?.access_token !== currentSession?.access_token) {
+    console.log("Auth state changed:", event, session);
+    useAuthStore.getState().setUser(session?.user ?? null);
+    useAuthStore.getState().setSession(session ?? null);
+    useAuthStore.getState().setLoading(false);
+  }
 });

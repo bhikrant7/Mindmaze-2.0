@@ -24,7 +24,7 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  const { loading, user, setTeam, session } = useAuthStore();
+  const { loading, team, setTeam, setSessionOverlap, signOut } = useAuthStore();
   const router = useRouter();
 
   // Handle login
@@ -50,13 +50,14 @@ export default function LoginPage() {
 
       // Check if the refresh token in the database matches the current session token
       if (
-        existingTeam.refresh_token &&
-        existingTeam.refresh_token === session?.refresh_token
+        existingTeam.refresh_token
+        //  &&
+        // existingTeam.refresh_token != session?.refresh_token
       ) {
         console.log("Session already exists. Logging out first...");
-
+        setSessionOverlap(true);
         // Log the user out
-        await supabase.auth.signOut();
+        await signOut();
       }
 
       // Sign in using Supabase Auth
@@ -131,12 +132,12 @@ export default function LoginPage() {
     }));
   };
 
-  // Redirect to main page if user is authenticated
-  // useEffect(() => {
-  //   if (user) {
-  //     router.push("/mainpage");
-  //   }
-  // }, [user]);
+  //Redirect to main page if user is authenticated
+  useEffect(() => {
+    if (team) {
+      router.push("/mainpage");
+    }
+  }, [team]);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-cover bg-center bg-no-repeat">
