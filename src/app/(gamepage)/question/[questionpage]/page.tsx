@@ -66,7 +66,7 @@ export default function QuestionPage({
     return <div>No question found</div>;
   }
 
-  return <QuestionCard question={question} />;
+  return <QuestionCard question={curr_quest} />;
 }
 
 
