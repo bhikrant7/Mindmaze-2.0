@@ -43,7 +43,7 @@ export default function Page() {
               {completed[index] && (
                 <div className="absolute -bottom-4 -right-5 w-12">
                   <Image
-                    src="/tick.png"
+                    src="/tick_white.png"
                     alt="Completed"
                     width={100}
                     height={100}
