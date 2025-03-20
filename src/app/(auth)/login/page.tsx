@@ -253,7 +253,7 @@ export default function LoginPage() {
           <div className="my-8 flex justify-center align-middle">
             <Button
               onClick={handleLogin}
-              className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[3px_3px_8px_rgba(255,149,68,0.4)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
+              className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[5px_5px_1px_rgba(255,149,68,0.3)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
             >
               {!loading ? (
                 <span>Let&#039;s Go</span>
@@ -282,8 +282,8 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center">
-          <div className="text-xs sm:text-sm mb-3 text-zinc-900 dark:text-zinc-100 hover:underline">
-            Forgot password? Shout for Chinmoy Da
+          <div className="text-xs sm:text-sm mb-3 text-white hover:underline hover:[text-underline-offset:3px]">
+            Forgot password? Shout for Chinmoy Borah
           </div>
         </div>
       </div>

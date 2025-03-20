@@ -2,8 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
-import Image from "next/image"; // Import Next.js Image component
-
+import Image from "next/image"; 
 export default function Page() {
   const router = useRouter();
   const [completed, setCompleted] = useState<boolean[]>(Array(15).fill(false));
@@ -42,14 +41,18 @@ export default function Page() {
             <button
               key={index}
               onClick={() => toggleCompletion(index)}
-              className={`px-4 py-6 rounded-md text-white text-2xl font-semibold shadow-md transition hover:scale-105 flex items-center justify-center gap-2 
-                    ${
-                      completed[index]
-                        ? "bg-green-500 hover:bg-green-600"
-                        : "bg-gradient-to-r from-orange-400 to-orange-600"
-                    }`}
+              className="relative px-4 py-6 rounded-md text-white text-2xl font-semibold shadow-md transition hover:scale-105 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600"
             >
-              Puzzle {index + 1} {completed[index] && "✅"}
+              Puzzle {index + 1}
+              {completed[index] && (
+                <Image
+                  src="/tick_white.png"
+                  alt="Completed"
+                  width={40}
+                  height={40}
+                  className="absolute -bottom-3 -right-3"
+                />
+              )}
             </button>
           ))}
         </div>
