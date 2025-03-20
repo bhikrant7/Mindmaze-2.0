@@ -10,7 +10,7 @@ interface AuthState {
   team: Partial<Team> | null;
   loading: boolean;
   session: Session | null;
-  
+
   signOut: () => Promise<void>;
   setUser: (user: User | null) => void;
   setTeam: (team: Partial<Team> | null) => void;
@@ -31,13 +31,14 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const { team } = useAuthStore.getState();
       //update the database to insert the refresh_token as null
+      await supabase.auth.signOut();
       if (team) {
         await supabase
           .from("teams")
           .update({ refresh_token: null })
           .eq("team_name", team.team_name);
       }
-      await supabase.auth.signOut();
+
       set({ user: null, team: null, session: null });
     } catch (err) {
       console.error("Error signing out", err);

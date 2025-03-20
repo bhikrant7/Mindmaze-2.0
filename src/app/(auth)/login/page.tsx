@@ -132,11 +132,11 @@ export default function LoginPage() {
   };
 
   // Redirect to main page if user is authenticated
-  useEffect(() => {
-    if (user) {
-      router.push("/mainpage");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (user) {
+  //     router.push("/mainpage");
+  //   }
+  // }, [user]);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-cover bg-center bg-no-repeat">
