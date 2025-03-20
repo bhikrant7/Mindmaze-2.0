@@ -38,7 +38,7 @@ export default function LoginPage() {
     );
 
     // Check if the email exists in the teams table
-    const { data: existingTeam} = await supabase
+    const { data: existingTeam } = await supabase
       .from("teams")
       .select("*")
       .eq("email", teamForm.email)
@@ -92,7 +92,6 @@ export default function LoginPage() {
         return;
       }
 
-
       // Insert new team into the teams table with default values
       const { data: newTeam, error: insertError } = await supabase
         .from("teams")
@@ -140,10 +139,6 @@ export default function LoginPage() {
   }, []);
 
   return (
-
-
-
-    
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-cover bg-center bg-no-repeat">
       <h1 className="press-start-2p-regular text-7xl top font-bold text-white">
         MINDMAZE 2.0
@@ -241,15 +236,11 @@ export default function LoginPage() {
         </div>
 
         <div className="text-center">
-          <a
-            href="#"
-            className="text-xs sm:text-sm mb-3 text-zinc-900 dark:text-zinc-100 hover:underline"
-          >
+          <div className="text-xs sm:text-sm mb-3 text-zinc-900 dark:text-zinc-100 hover:underline">
             Forgot password? Shout for Chinmoy Da
-          </a>
+          </div>
         </div>
       </div>
     </div>
   );
-  
 }

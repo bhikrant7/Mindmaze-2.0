@@ -10,13 +10,7 @@ interface AuthState {
   team: Partial<Team> | null;
   loading: boolean;
   session: Session | null;
-  // authenticate: (
-  //   team_name: string,
-  //   email: string,
-  //   password: string
-  // ) => Promise<void>;
-  // signUp: (team_name: string, email: string, password: string) => Promise<void>;
-  // signIn: (team_name: string, email: string, password: string) => Promise<void>;
+  
   signOut: () => Promise<void>;
   setUser: (user: User | null) => void;
   setTeam: (team: Partial<Team> | null) => void;
@@ -35,6 +29,14 @@ export const useAuthStore = create<AuthState>((set) => ({
   setLoading: (loading: boolean) => set({ loading }),
   signOut: async () => {
     try {
+      const { team } = useAuthStore.getState();
+      //update the database to insert the refresh_token as null
+      if (team) {
+        await supabase
+          .from("teams")
+          .update({ refresh_token: null })
+          .eq("id", team.id);
+      }
       await supabase.auth.signOut();
       set({ user: null, team: null, session: null });
     } catch (err) {
