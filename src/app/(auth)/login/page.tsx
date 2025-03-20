@@ -18,6 +18,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
+
 export default function LoginPage() {
   const [teamForm, setTeamForm] = useState<Team>({
     team_name: "",
@@ -57,9 +58,9 @@ export default function LoginPage() {
         await signOut().then(() => {
           console.log("Logged out successfully");
           // Perform a hard refresh
-          // router.replace("/login");
+          router.replace("/login");
         });
-        // return;
+        return;
       }
 
       // Sign in using Supabase Auth
