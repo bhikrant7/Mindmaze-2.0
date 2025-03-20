@@ -36,8 +36,9 @@ const QuestionCard = ({ question }: { question: Partial<Question> | null }) => {
                 src={question?.media_image}
                 alt="Question media"
                 layout="fill"
-                objectFit="contain"
+                objectFit="contain" // Ensures image fits properly
                 className="rounded-lg"
+                priority
               />
             </div>
           )}
