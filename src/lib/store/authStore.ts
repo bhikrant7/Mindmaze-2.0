@@ -52,7 +52,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       return;
     }
 
-    const newSessionOverlap = (data?.session_count) + 1;
+    const newSessionOverlap = data?.session_count + 1;
 
     const { error: updateError } = await supabase
       .from("teams")
