@@ -1,20 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, password } = body;
+    const { email, password, team_name } = body;
 
-    // TODO: Add your authentication logic here
-    // For example:
-    // 1. Validate input
-    if (!email || !password) {
+    if (!email || !password || !team_name) {
       return NextResponse.json(
-        { error: "Email and password are required" },
+        { error: "All credentials are required" },
         { status: 400 }
       );
     }
 
+    console.log("User Data", body);
     // 2. Check credentials against your database
     // const user = await db.user.findUnique({ where: { email } });
     // const isValid = await comparePasswords(password, user.password);
@@ -24,10 +22,11 @@ export async function POST(request: Request) {
 
     // For demo purposes, returning a mock success response
     return NextResponse.json({ message: "Login successful" }, { status: 200 });
-  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
     console.error("Login error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: error.message || "Error in Login" },
       { status: 500 }
     );
   }

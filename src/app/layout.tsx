@@ -2,6 +2,8 @@ import { ThemeProvider } from "next-themes";
 import type { Metadata } from "next";
 // import StatusBar from "@/components/StatusBar";
 import "./globals.css";
+// import AuthInitializer from "./_component/AuthInitializer";
+
 
 export const metadata: Metadata = {
   title: "Your App",
@@ -22,6 +24,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          {/* <AuthInitializer /> */}
+          {/* <SeedTeams /> */}
           {/* Sticky StatusBar */}
           {/* <div className="sticky top-0 left-0 right-0 z-50 flex-none">
             <StatusBar />

@@ -1,10 +1,13 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const [completed, setCompleted] = useState<boolean[]>(Array(15).fill(false));
 
   const toggleCompletion = (index: number) => {
+    router.push(`/question/${index + 1}`);
     setCompleted((prev) => {
       const newCompleted = [...prev];
       newCompleted[index] = !newCompleted[index]; // Toggle completion

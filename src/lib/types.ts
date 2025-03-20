@@ -2,15 +2,16 @@ export type UUID = number; // For team IDs
 
 // Teams Table
 export interface Team {
-  id: UUID;
+  id?: UUID;
   team_name: string;
   password: string;
-  token: string;
-  active_session: boolean;
-  current_question_id: number;
-  questions_solved: number;
-  has_submitted: boolean;
+  email:string;
+  refresh_token?: string | null;
+  current_question_id?: number | 0; //random 4 digit number assign to each team to mark their question answer id
+  questions_solved?: number | 0;
+  has_submitted?: boolean | false;
 }
+
 
 // Questions Table
 export interface Question {
