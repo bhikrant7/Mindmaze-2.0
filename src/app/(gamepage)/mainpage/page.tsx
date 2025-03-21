@@ -1,12 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
+import bcrypt from "bcryptjs"
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
-import Image from "next/image"; 
+import { useQuestionStore } from "@/lib/store/questionStore";
+import Image from "next/image";
+import { getAllQuestion } from "@/lib/apiCalls/api";
+import { Question } from "@/lib/types";
+
 export default function Page() {
   const router = useRouter();
   const [completed, setCompleted] = useState<boolean[]>(Array(15).fill(false));
   const { user } = useAuthStore();
+  const { questions, setQuestions } = useQuestionStore();
+
 
   const toggleCompletion = (index: number) => {
     router.push(`/question/${index + 1}`);
@@ -17,12 +24,34 @@ export default function Page() {
     });
   };
 
+  const fetchAllQuestions = async () => {
+    try {
+      const questions = await getAllQuestion();
+      let questionsList: Partial<Question>[] = questions?.map((question) => {
+        const hashedAnswer = question?.correct_answer
+          ? bcrypt.hashSync(question.correct_answer.trim().toLowerCase(), 10) // Salt rounds = 10
+          : undefined;
+        return {
+          ...question,
+          correct_answer: hashedAnswer
+        }
+      }) || [];
+      console.log('questionsList: ', questionsList);
+      setQuestions(questionsList);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchAllQuestions();
+  }, [])
+
   useEffect(() => {
     if (!user) {
       router.push("/login");
     }
   }, [user]);
-
   return (
     <main className="min-h-screen flex flex-col">
       {/* Status Bar */}
@@ -37,10 +66,11 @@ export default function Page() {
 
         {/* 3x5 Grid Layout for Questions */}
         <div className="mt-20 grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-40 gap-y-20 px-4">
-          {Array.from({ length: 15 }).map((_, index) => (
+          {questions?.map((_, index) => (
             <button
               key={index}
-              onClick={() => toggleCompletion(index)}
+              // onClick={() => toggleCompletion(index)}
+              onClick={() => router.push(`/question/${index + 1}`)}
               className="relative px-4 py-6 rounded-md text-white text-2xl font-semibold shadow-md transition hover:scale-105 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600"
             >
               Puzzle {index + 1}

@@ -3,13 +3,13 @@ import { Question } from "../types";
 
 
 interface questionState{
-    questions:Partial<Question|null>[]; //all quesitons
+    questions:Partial<Question>[]|null; //all quesitons
     curr_quest:Partial<Question|null>; //current question
-    corr_questions:Partial<Question|null>[]; //correct questions
+    corr_questions:Partial<Question[]|null>; //correct questions
     setCurrQuest:(curr_quest:Partial<Question|null>)=>void;
     setCurrAnswer:(curr_answer:string)=>void;
-    setQuestions:(questions:Partial<Question|null>[])=>void;
-    setCorrQuest:(corr_questions:Partial<Question|null>[])=>void;
+    setQuestions:(questions: Partial<Question>[] | null)=>void;
+    setCorrQuest:(corr_questions:Partial<Question[]|null>)=>void;
 }
 
 export const useQuestionStore = create<questionState>((set)=>({

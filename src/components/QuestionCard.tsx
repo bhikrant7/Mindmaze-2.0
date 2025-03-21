@@ -6,6 +6,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { useQuestionStore } from "@/lib/store/questionStore";
 import { Button } from "@/components/ui/button";
 import { createSubmission } from "@/lib/apiCalls/api";
+import { verifyAnswer } from "@/lib/helpers/common";
 
 const QuestionCard = ({ question }: { question: Partial<Question> | null }) => {
   const { team } = useAuthStore();
@@ -13,12 +14,19 @@ const QuestionCard = ({ question }: { question: Partial<Question> | null }) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const handleSubmit = async () => {
     try {
-      const newSubmission = await createSubmission(team?.id, question?.id, question?.answer)
+      if (!question?.correct_answer) {
+        console.log('No correct answer available');
+        return;
+      }
+      const isCorrect = verifyAnswer(question?.user_answer, question?.correct_answer);
+      const newSubmission = await createSubmission(team?.id, question?.id, isCorrect);
       console.log('newSubmission: ', newSubmission);
     } catch (error) {
       console.error(error);
     }
   }
+
+  console.log('team: ', team);
   
   return (
     <div className="p-6">
@@ -50,7 +58,7 @@ const QuestionCard = ({ question }: { question: Partial<Question> | null }) => {
           )}
         </div>
         <Input 
-          value={question?.answer}
+          value={question?.user_answer}
           width="30%"
           onChange={(e) => { setCurrAnswer(e.target.value) }}
           placeholder="Type your answer here..."

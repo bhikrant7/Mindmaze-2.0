@@ -29,11 +29,11 @@ export async function getQuestion(id: number): Promise<Question | null> {
 }
 
 //get all Question
-export async function getAllQuestion(): Promise<Partial<Question[]> | null> {
+export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
   try {
     const { data, error } = await supabase
       .from("questions")
-      .select("id,question_text, media_image, media_video")
+      .select("id,question_text, media_image, media_video, correct_answer")
       .order("id", { ascending: true });
 
     if (error) {
@@ -41,7 +41,7 @@ export async function getAllQuestion(): Promise<Partial<Question[]> | null> {
       return null;
     }
     console.log("Fetched questions:", data);
-    return data;
+    return data as Partial<Question>[];
   } catch (err) {
     console.error("Error:", err);
     return null;
@@ -49,24 +49,34 @@ export async function getAllQuestion(): Promise<Partial<Question[]> | null> {
 }
 
 
-export async function createSubmission(teamId: number | undefined, questionId: number | undefined, submittedAnswer: string| undefined) {
+
+export async function createSubmission(teamId: number | undefined, questionId: number | undefined, isCorrect: boolean) {
   try {
-    const { data, error } = await supabase
+
+    // const { data:question, error:questionError } = await supabase
+    //   .from('questions')
+    //   .select('*')
+    //   .eq('id', questionId)
+    //   .single();
+
+    // console.log('question', question);
+    const { data:submission, error:submissionError } = await supabase
     .from('submissions')
     .insert([
       {
         team_id: teamId,
         question_id: questionId,
-        submitted_answer: submittedAnswer,
+        is_correct: isCorrect
       },
     ])
     .select('*');
 
-    if (error) {
+    if (submissionError) {
       return null;
     }
-    return data;
+    return submission;
   } catch (error) {
     return null;
   }
 }
+

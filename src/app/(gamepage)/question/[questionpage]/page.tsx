@@ -17,7 +17,7 @@ export default function QuestionPage({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const questionpage = params.questionpage; // Corrected
-  const { curr_quest,  setCurrQuest } = useQuestionStore();
+  const { questions, curr_quest,  setCurrQuest } = useQuestionStore();
 
   useEffect(() => {
     const fetchQuestion = async () => {
@@ -43,6 +43,10 @@ export default function QuestionPage({
 
     fetchQuestion();
   }, [questionpage]);
+
+  useEffect(() => {
+    console.log('questions: ', questions);
+  }, [questions]);
 
   if (loading) {
     return (
