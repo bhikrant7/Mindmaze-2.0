@@ -253,11 +253,11 @@ export default function LoginPage() {
     if (user && !loading) {
       router.push("/mainpage");
     }
-  }, [user, loading]);
+  }, [user, router, loading]);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-cover bg-center bg-no-repeat">
-      <h1 className="press-start-2p-regular text-7xl top font-bold text-white">
+      <h1 className="press-start-2p-regular sm:text-5xl md:text-5xl lg:text-7xl top font-bold text-white">
         MINDMAZE 2.0
       </h1>
       <div className="w-full max-w-sm sm:max-w-md p-4 sm:p-8 my-20 space-y-4 sm:space-y-6 bg-gray/10 rounded-2xl shadow-lg shadow-black/90 backdrop-blur-[5.1px] border">
