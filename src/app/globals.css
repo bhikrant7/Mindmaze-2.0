@@ -53,6 +53,9 @@
   font-style: normal;
 }
 
+* {
+  scrollbar-width: none;
+}
 
 :root {
   --radius: 0.625rem;

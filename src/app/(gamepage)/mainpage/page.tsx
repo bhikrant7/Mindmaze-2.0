@@ -32,7 +32,7 @@ export default function Page() {
     }
   }, [user, router]);
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen flex flex-col scrollbar-hide">
       {/* Main Content Area */}
       <div className="flex-grow container mx-auto p-4">
         {/* Title */}
