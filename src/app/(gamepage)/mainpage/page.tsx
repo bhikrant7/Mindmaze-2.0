@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import bcrypt from "bcryptjs"
+import bcrypt from "bcryptjs";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useQuestionStore } from "@/lib/store/questionStore";
 import Image from "next/image";
 import { getAllQuestion } from "@/lib/apiCalls/api";
 import { Question } from "@/lib/types";
-import {StyledWrapper} from '@/components/StyledWrapper'
+import { StyledWrapper } from "@/components/StyledWrapper";
+import SignOutButton from "@/components/SignOutButton";
 
 export default function Page() {
   const router = useRouter();
@@ -15,22 +16,21 @@ export default function Page() {
   const { user } = useAuthStore();
   const { questions, setQuestions } = useQuestionStore();
 
-
-  const toggleCompletion = (index: number) => {
-    router.push(`/question/${index + 1}`);
-    setCompleted((prev) => {
-      const newCompleted = [...prev];
-      newCompleted[index] = !newCompleted[index]; // Toggle completion
-      return newCompleted;
-    });
-  };
+  // const toggleCompletion = (index: number) => {
+  //   router.push(`/question/${index + 1}`);
+  //   setCompleted((prev) => {
+  //     const newCompleted = [...prev];
+  //     newCompleted[index] = !newCompleted[index]; // Toggle completion
+  //     return newCompleted;
+  //   });
+  // };
 
   useEffect(() => {
     if (!user) {
-      <StyledWrapper />
-      // router.push("/login");
+      <StyledWrapper />;
+      router.replace("/login");
     }
-  }, [user,router]);
+  }, [user, router]);
   return (
     <main className="min-h-screen flex flex-col">
       {/* Status Bar */}
@@ -66,6 +66,12 @@ export default function Page() {
           ))}
         </div>
       </div>
+
+      <footer>
+        <div className="w-full py-6 flex justify-center items-center">
+          {<SignOutButton />}
+        </div>
+      </footer>
     </main>
   );
 }

@@ -15,7 +15,7 @@ export async function getQuestion(id: number): Promise<Question | null> {
       return null;
     }
 
-    console.log("Fetched data:", data); // Debug log to see what we're getting
+    // console.log("Fetched data:", data); // Debug log to see what we're getting
 
     const question = {
       ...data,
@@ -40,7 +40,7 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
       console.error("Error fetching questions:", error);
       return null;
     }
-    console.log("Fetched questions:", data);
+    // console.log("Fetched questions:", data);
     return data as Partial<Question>[];
   } catch (err) {
     console.error("Error:", err);
