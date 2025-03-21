@@ -1,8 +1,6 @@
 "use client";
 
 import QuestionCard from "@/components/QuestionCard";
-import { getQuestion } from "@/lib/apiCalls/api";
-import { Question } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { useQuestionStore } from "@/lib/store/questionStore";
 import React from 'react';
@@ -17,50 +15,25 @@ export default function QuestionPage({
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const questionpage = params.questionpage; // Corrected
-  const { questions, curr_quest,  setCurrQuest } = useQuestionStore();
+  const { questions, curr_quest, setCurrQuestByIndex } = useQuestionStore();
+
+  const setCurrentQuestion = () => {
+    try {
+      const questionId = parseInt(questionpage, 10);
+      setCurrQuestByIndex(questionId-1);
+    } catch (error) {
+      console.error(error);
+      setError("Failed to load question");
+    }
+  }
 
   useEffect(() => {
-    const fetchQuestion = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const questionId = parseInt(questionpage, 10); // Convert string to number
-
-        const fetchedQuestion = await getQuestion(questionId);
-        console.log('fetchedQuestion: ', fetchedQuestion);
-        if (!fetchedQuestion) {
-          setError("Question not found");
-          return;
-        }
-        setCurrQuest(fetchedQuestion);
-      } catch (error) {
-        console.error("Error fetching question:", error);
-        setError("Failed to load question");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchQuestion();
+    setCurrentQuestion();
   }, [questionpage]);
 
   useEffect(() => {
     console.log('questions: ', questions);
   }, [questions]);
-
-  if (loading) {
-    return (
-      <StyledWrapper>
-      <div className="loadingspinner">
-        <div id="square1" />
-        <div id="square2" />
-        <div id="square3" />
-        <div id="square4" />
-        <div id="square5" />
-      </div>
-    </StyledWrapper>
-    );
-  }
 
   if (error) {
     return <div className="text-red-500">{error}</div>;
@@ -70,7 +43,7 @@ export default function QuestionPage({
     return <div>No question found</div>;
   }
 
-  return <QuestionCard question={curr_quest} />;
+  return <QuestionCard />;
 }
 
 
