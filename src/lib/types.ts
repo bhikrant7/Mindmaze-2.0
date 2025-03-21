@@ -21,7 +21,6 @@ export interface AuthSession{
   email?:string;
 }
 
-
 // Questions Table
 export interface Question {
   id: number;
@@ -30,6 +29,8 @@ export interface Question {
   media_video?: string; // URL of video (optional)
   correct_answer?: string;
   user_answer?: string;
+  is_submitted?: boolean;
+  is_solved?: boolean;
 }
 
 // Submissions Table
