@@ -43,7 +43,7 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
     // console.log("Fetched questions:", data);
     return data as Partial<Question>[];
   } catch (err) {
-    console.error("Error:", err);
+    console.error("Error in getting :", err);
     return null;
   }
 }
@@ -52,23 +52,25 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
 
 export async function createSubmission(teamId: UUID, questionId: number | undefined, user_answer: string, isCorrect: boolean) {
     try {
-    // const { data:submission, error:submissionError } = await supabase
-    // .from('submissions')
-    // .insert([
-    //   {
-    //     team_id: teamId,
-    //     question_id: questionId,
-    //     submitted_answer: user_answer,
-    //     is_correct: isCorrect,
-    //   },
-    // ])
-    // .select('*');
+    const { data:submission, error:submissionError } = await supabase
+    .from('submissions')
+    .insert([
+      {
+        team_id: teamId,
+        question_id: questionId,
+        submitted_answer: user_answer,
+        is_correct: isCorrect,
+      },
+    ])
+    .select();
 
-    // if (submissionError) {
-    //   return null;
-    // }
-    // return submission;
+    if (submissionError) {
+      return null;
+    }
+    return submission;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
+    console.error("Error in submission :",error)
     return null;
   }
 }
