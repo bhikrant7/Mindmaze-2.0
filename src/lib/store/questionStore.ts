@@ -29,11 +29,11 @@ export const useQuestionStore = create<questionState>((set)=>({
     setCorrQuest: (corr_questions) => set({ corr_questions }),
     setCurrQuestByIndex: (index: number) =>
         set((state) => {
-          const questions = state.questions || [];
-          if (index < 0 || index >= questions.length) {
-            console.warn("Invalid index for setCurrQuestByIndex:", index);
-            return {};
-          }
-          return { curr_quest: questions[index] };
+            const questions = state.questions || [];
+            if (index < 0 || index >= questions.length) {
+                console.warn("Invalid index for setCurrQuestByIndex:", index);
+                return {};
+            }
+            return { curr_quest: questions[index] };
     }),
 }))
