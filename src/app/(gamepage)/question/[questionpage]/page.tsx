@@ -1,7 +1,7 @@
 "use client";
 
 import QuestionCard from "@/components/QuestionCard";
-import { useEffect, useState } from "react";
+import {use, useEffect, useState } from "react";
 import { useQuestionStore } from "@/lib/store/questionStore";
 import React from 'react';
 import styled from 'styled-components';
@@ -14,7 +14,7 @@ export default function QuestionPage({
   // const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const questionpage = params.questionpage; // Corrected
+  const questionpage = use(params).questionpage; // Corrected
   const { questions, curr_quest, setCurrQuestByIndex } = useQuestionStore();
 
   const setCurrentQuestion = () => {

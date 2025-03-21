@@ -7,6 +7,7 @@ import { useQuestionStore } from "@/lib/store/questionStore";
 import Image from "next/image";
 import { getAllQuestion } from "@/lib/apiCalls/api";
 import { Question } from "@/lib/types";
+import {StyledWrapper} from '@/components/StyledWrapper'
 
 export default function Page() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function Page() {
   const fetchAllQuestions = async () => {
     try {
       const questions = await getAllQuestion();
-      let questionsList: Partial<Question>[] = questions?.map((question) => {
+      const questionsList: Partial<Question>[] = questions?.map((question) => {
         const hashedAnswer = question?.correct_answer
           ? bcrypt.hashSync(question.correct_answer.trim().toLowerCase(), 10) // Salt rounds = 10
           : undefined;
@@ -49,7 +50,8 @@ export default function Page() {
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      <StyledWrapper />
+      // router.push("/login");
     }
   }, [user,router]);
   return (
