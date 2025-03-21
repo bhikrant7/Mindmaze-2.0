@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import bcrypt from "bcryptjs";
-import bcrypt from "bcryptjs";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useQuestionStore } from "@/lib/store/questionStore";
