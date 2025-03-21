@@ -21,6 +21,7 @@ export default function QuestionPage({
     try {
       const questionId = parseInt(questionpage, 10);
       setCurrQuestByIndex(questionId-1);
+      setLoading(false);
     } catch (error) {
       console.error(error);
       setError("Failed to load question");
@@ -29,7 +30,7 @@ export default function QuestionPage({
 
   useEffect(() => {
     setCurrentQuestion();
-  }, [questionpage]);
+  }, [questionpage, questions]);
 
   useEffect(() => {
     console.log('questions: ', questions);
@@ -39,8 +40,22 @@ export default function QuestionPage({
     return <div className="text-red-500">{error}</div>;
   }
 
-  if (!curr_quest) {
-    return <div>No question found</div>;
+  if (loading) {
+      return (
+        <StyledWrapper>
+          <div className="loadingspinner">
+            <div id="square1" />
+            <div id="square2" />
+            <div id="square3" />
+            <div id="square4" />
+            <div id="square5" />
+          </div>
+        </StyledWrapper>
+      );
+  }
+
+  if (loading === false && !curr_quest) {
+    return <div>No question found</div>; // Prevents empty QuestionCard from rendering
   }
 
   return <QuestionCard />;

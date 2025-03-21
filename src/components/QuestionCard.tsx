@@ -12,6 +12,7 @@ const QuestionCard = () => {
   const { team } = useAuthStore();
   const { curr_quest, setCurrAnswer } = useQuestionStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  
   const handleSubmit = async () => {
     try {
       if (!curr_quest?.correct_answer) {
@@ -35,12 +36,6 @@ const QuestionCard = () => {
       setIsSubmitting(false);
     }
   }
-
-  useEffect(() => {
-    console.log('currQuest: ', curr_quest);
-  }, [])
-
-  console.log('team: ', team);
   
   return (
     <div className="p-6">

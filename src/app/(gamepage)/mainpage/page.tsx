@@ -25,29 +25,6 @@ export default function Page() {
     });
   };
 
-  const fetchAllQuestions = async () => {
-    try {
-      const questions = await getAllQuestion();
-      const questionsList: Partial<Question>[] = questions?.map((question) => {
-        const hashedAnswer = question?.correct_answer
-          ? bcrypt.hashSync(question.correct_answer.trim().toLowerCase(), 10) // Salt rounds = 10
-          : undefined;
-        return {
-          ...question,
-          correct_answer: hashedAnswer
-        }
-      }) || [];
-      console.log('questionsList: ', questionsList);
-      setQuestions(questionsList);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  useEffect(() => {
-    fetchAllQuestions();
-  }, [])
-
   useEffect(() => {
     if (!user) {
       <StyledWrapper />
