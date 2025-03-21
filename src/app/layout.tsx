@@ -2,6 +2,7 @@ import { ThemeProvider } from "next-themes";
 import type { Metadata } from "next";
 // import StatusBar from "@/components/StatusBar";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 // import AuthInitializer from "./_component/AuthInitializer";
 
 
@@ -34,6 +35,7 @@ export default function RootLayout({
           {/* Main content should only scroll when content exceeds viewport height */}
           <main className="flex-1 overflow-y-auto">
             {children}
+            <Toaster />
           </main>
         </ThemeProvider>
       </body>

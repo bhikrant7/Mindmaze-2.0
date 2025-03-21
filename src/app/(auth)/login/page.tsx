@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const [teamForm, setTeamForm] = useState<Team>({
@@ -25,15 +25,7 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  const {
-    loading,
-    user,
-    setTeam,
-    session,
-    signOut,
-    setSessionOverlap,
-    session_overlap,
-  } = useAuthStore();
+  const { loading, user, setTeam, setSession} = useAuthStore();
   const router = useRouter();
 
   // Handle login
@@ -53,32 +45,56 @@ export default function LoginPage() {
       .eq("email", teamForm.email)
       .single();
 
-    // If team exists, then sign in; otherwise, sign up
     if (existingTeam) {
       console.log("Existing team found. Signing in...");
 
-      // Check if the refresh token in the database matches the current session token
-      if (
-        existingTeam.refresh_token &&
-        existingTeam.refresh_token !== session?.refresh_token
-      ) {
-        console.log("Session already exists. Logging out first...");
-        // setSessionOverlap(true);
-        // Log the user out
-        await signOut().then(() => {
-          console.log("Logged out successfully");
-          setSessionOverlap(existingTeam.email);
-          console.log("session count: ",session_overlap)
-          // Perform a hard refresh
-          router.replace("/login");
-        });
-      }
-      if (session_overlap >= 2) {
-        console.log("Session overlap detected. Block you here...");
+      // Check active sessions for this team
+      const { data: activeSessions } = await supabase
+        .from("sessions")
+        .select("*")
+        .eq("team_id", existingTeam.id);
 
-        router.replace("/login");
+      if (activeSessions && activeSessions.length >= 1) {
+
+        console.log("Active session detected.Please log out there first...")
+        toast.error("Active session detected.Please log out there first...", {
+          duration: 10000, // How long the toast stays (in ms)
+          position: "top-center", // Position of the toast
+          style: {
+            background: "#341949",
+            color: "#66FF00",
+          },
+        }); // Success toast
+
         return;
       }
+
+      // // Get current session count from the database
+      // const { data: sessionData } = await supabase
+      //   .from("teams")
+      //   .select("session_count")
+      //   .eq("email", teamForm.email)
+      //   .single();
+
+      // if (sessionData?.session_count >= 2) {
+      //   console.log("Session limit reached. Blocking login...");
+      //   toast.warning("Second session detected. Please log out first.", {
+      //     autoClose: false,
+      //   });
+      //   router.replace("/login");
+      //   return;
+      // }
+
+      // // If there is an existing refresh token mismatch, force logout
+      // if (
+      //   existingTeam.refresh_token &&
+      //   existingTeam.refresh_token !== session?.refresh_token
+      // ) {
+      //   console.log("Session already exists. Logging out first...");
+      //   await signOut();
+      //   router.replace("/login");
+      //   return;
+      // }
 
       // Sign in using Supabase Auth
       const { error } = await supabase.auth.signInWithPassword({
@@ -91,7 +107,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Update team's refresh_token with the new session's token
+      // Fetch the new session
       const { data: newSession, error: sessionError } =
         await supabase.auth.getSession();
       if (sessionError) {
@@ -99,15 +115,46 @@ export default function LoginPage() {
         return;
       }
 
-      const { error: updateError } = await supabase
-        .from("teams")
-        .update({ refresh_token: newSession?.session?.refresh_token })
-        .eq("email", teamForm.email);
+      // Insert new session into `sessions` table
+      const { error: sessionInsertError } = await supabase
+        .from("sessions")
+        .insert([
+          {
+            team_id: existingTeam.id,
+            id: newSession.session?.refresh_token, // Using refresh token for tracking
+            email: teamForm.email,
+          },
+        ]);
 
-      if (updateError) {
-        console.error("Failed to update refresh token:", updateError.message);
+      if (sessionInsertError) {
+        console.error("Error inserting session:", sessionInsertError.message);
         return;
       }
+
+      // Increment session count in `teams` table
+      // const { error: sessionCountError } = await supabase
+      //   .from("teams")
+      //   .update({ session_count: existingTeam.session_count + 1 })
+      //   .eq("id", existingTeam.id);
+
+      // if (sessionCountError) {
+      //   console.error(
+      //     "Failed to update session count:",
+      //     sessionCountError.message
+      //   );
+      //   return;
+      // }
+
+      // // Update the refresh token in the database
+      // const { error: updateError } = await supabase
+      //   .from("teams")
+      //   .update({ refresh_token: newSession?.session?.refresh_token })
+      //   .eq("email", teamForm.email);
+
+      // if (updateError) {
+      //   console.error("Failed to update refresh token:", updateError.message);
+      //   return;
+      // }
 
       // Fetch the updated team data
       const { data: updatedTeam } = await supabase
@@ -117,11 +164,10 @@ export default function LoginPage() {
         .single();
 
       // Update Zustand store
-      // setUser(data.user);
+      setSession(newSession.session); // Store the session in Zustand
       setTeam(updatedTeam || existingTeam);
     } else {
       console.log("No team found. Signing up...");
-      // Sign up the user with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: teamForm.email,
         password: teamForm.password,
@@ -134,11 +180,11 @@ export default function LoginPage() {
 
       const user = authData.user;
       if (!user) {
-        console.error("No user returned after sign up");
+        console.error("No user returned after sign-up");
         return;
       }
 
-      // Insert new team into the teams table with default values
+      // Insert new team into the teams table
       const { data: newTeam, error: insertError } = await supabase
         .from("teams")
         .insert([
@@ -150,6 +196,7 @@ export default function LoginPage() {
             questions_solved: 0,
             has_submitted: false,
             refresh_token: authData.session?.refresh_token,
+            // session_count: 1, // Set initial session count
           },
         ])
         .select()
@@ -160,8 +207,32 @@ export default function LoginPage() {
         return;
       }
 
+      //get the current session
+      const { data: newSession, error: sessionError } =
+        await supabase.auth.getSession();
+      if (sessionError) {
+        console.error("Error fetching session:", sessionError.message);
+        return;
+      }
+
+      // Insert new session into `sessions` table
+      const { error: sessionInsertError } = await supabase
+        .from("sessions")
+        .insert([
+          {
+            team_id: newTeam.id,
+            id: newSession.session?.refresh_token, // Using refresh token for tracking
+            email: teamForm.email,
+          },
+        ]);
+
+      if (sessionInsertError) {
+        console.error("Error inserting session:", sessionInsertError.message);
+        return;
+      }
+
       // Update Zustand store
-      // setUser(user);
+      setSession(authData.session); // Store session in Zustand
       setTeam(newTeam);
     }
 
@@ -189,7 +260,6 @@ export default function LoginPage() {
       <h1 className="press-start-2p-regular text-7xl top font-bold text-white">
         MINDMAZE 2.0
       </h1>
-
       <div className="w-full max-w-sm sm:max-w-md p-4 sm:p-8 my-20 space-y-4 sm:space-y-6 bg-gray/10 rounded-2xl shadow-lg shadow-black/90 backdrop-blur-[5.1px] border">
         <div className="space-y-1 sm:space-y-2 text-center">
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">

@@ -48,24 +48,28 @@ export async function getAllQuestion(): Promise<Partial<Question[]> | null> {
   }
 }
 
-
-export async function createSubmission(teamId: number | undefined, questionId: number | undefined, submittedAnswer: string| undefined) {
+export async function createSubmission(
+  teamId: number | undefined,
+  questionId: number | undefined,
+  submittedAnswer: string | undefined
+) {
   try {
     const { data, error } = await supabase
-    .from('submissions')
-    .insert([
-      {
-        team_id: teamId,
-        question_id: questionId,
-        submitted_answer: submittedAnswer,
-      },
-    ])
-    .select('*');
+      .from("submissions")
+      .insert([
+        {
+          team_id: teamId,
+          question_id: questionId,
+          submitted_answer: submittedAnswer,
+        },
+      ])
+      .select("*");
 
     if (error) {
       return null;
     }
     return data;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     return null;
   }

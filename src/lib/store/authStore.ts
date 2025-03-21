@@ -2,7 +2,6 @@
 
 import { create } from "zustand";
 import { supabase } from "../supabaseClient";
-// import { AuthError, Session, User } from "@supabase/supabase-js";
 import { Session, User } from "@supabase/supabase-js";
 import { Team } from "../types";
 
@@ -11,22 +10,15 @@ interface AuthState {
   team: Partial<Team> | null;
   loading: boolean;
   session: Session | null;
-  session_overlap: number | 0;
+  activeSessions: number;
 
   signOut: () => Promise<void>;
   setUser: (user: User | null) => void;
   setTeam: (team: Partial<Team> | null) => void;
   setSession: (session: Session | null) => void;
   setLoading: (loading: boolean) => void;
-  setSessionOverlap: (email: string) => void;
-  // signIn: (
-  //   email: string,
-  //   password: string
-  // ) => Promise<User | Session | AuthError | null>;
-  // signUp: (
-  //   email: string,
-  //   password: string
-  // ) => Promise<User | Session | AuthError | null>;
+  setActiveSessions: (count: number) => void;
+  subscribeToSessionUpdates: (email: string) => () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -34,105 +26,60 @@ export const useAuthStore = create<AuthState>((set) => ({
   team: null,
   loading: true,
   session: null,
-  session_overlap: 0,
+  activeSessions: 0,
 
   setUser: (user: User | null) => set({ user }),
   setTeam: (team: Partial<Team> | null) => set({ team }),
   setSession: (session: Session | null) => set({ session }),
   setLoading: (loading: boolean) => set({ loading }),
-  setSessionOverlap: async (email: string) => {
-    const { data, error } = await supabase
-      .from("teams")
-      .select("session_count")
-      .eq("email", email)
-      .single();
+  setActiveSessions: (count: number) => set({ activeSessions: count }),
 
-    if (error) {
-      console.error("Error fetching session_overlap:", error.message);
-      return;
-    }
+  subscribeToSessionUpdates: (email: string) => {
+    // Subscribe to changes on the sessions table for the current email
+    const channel = supabase
+      .channel(`session_updates_${email}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*", // listen for INSERT, UPDATE, and DELETE events
+          schema: "public",
+          table: "sessions",
+          filter: `email=eq.${email}`,
+        },
+        async (payload) => {
+          console.log("Session change detected:", payload);
+          // Count active sessions directly from the sessions table
+          const { data: sessions, error } = await supabase
+            .from("sessions")
+            .select("*")
+            .eq("email", email);
+          if (!error && sessions) {
+            set({ activeSessions: sessions.length });
+          }
+        }
+      )
+      .subscribe();
 
-    const newSessionOverlap = data?.session_count + 1;
-
-    const { error: updateError } = await supabase
-      .from("teams")
-      .update({ session_count: newSessionOverlap })
-      .eq("email", email);
-
-    if (updateError) {
-      console.error("Error updating session_overlap:", updateError.message);
-    } else {
-      set({ session_overlap: newSessionOverlap });
-    }
+    return () => {
+      supabase.removeChannel(channel);
+    };
   },
 
   signOut: async () => {
     try {
-      const { user } = useAuthStore.getState();
+      await supabase
+        .from("sessions")
+        .delete()
+        .eq("team_id", useAuthStore.getState().team?.id)
+        .eq("session_id", useAuthStore.getState().session?.refresh_token);
+
       await supabase.auth.signOut();
-
-      if (user?.email) {
-        await supabase
-          .from("teams")
-          .update({ refresh_token: null })
-          .eq("email", user.email);
-      }
-
-      set({ user: null, team: null, session: null });
+      set({ user: null, team: null, session: null, activeSessions: 0 });
     } catch (err) {
       console.error("Error signing out:", err);
-      set({ user: null, team: null, session: null });
+      set({ user: null, team: null, session: null, activeSessions: 0 });
     }
   },
-
-  // signIn: async (
-  //   email: string,
-  //   password: string
-  // ): Promise<User | Session | AuthError | null> => {
-  //   try {
-  //     const { data, error } = await supabase.auth.signInWithPassword({
-  //       email,
-  //       password,
-  //     });
-  //     if (data) {
-  //       set({ user: data.user, session: data.session });
-  //       return data.user || data.session;
-  //     } else if (error) {
-  //       console.error("Error signing in:", error);
-  //       return error;
-  //     }
-
-  //     return null;
-  //   } catch (err) {
-  //     console.error("Error signing in:", err);
-  //     return null;
-  //   }
-  // },
-
-  // signUp: async (
-  //   email: string,
-  //   password: string
-  // ): Promise<User | Session | AuthError | null> => {
-  //   try {
-  //     const { data, error } = await supabase.auth.signUp({
-  //       email,
-  //       password,
-  //     });
-
-  //     if (data) {
-  //       set({ user: data.user, session: data.session });
-  //       return data.session || data.user;
-  //     } else if (error) {
-  //       console.error("Error signing up:", error);
-  //       return error;
-  //     }
-
-  //     return null;
-  //   } catch (err) {
-  //     console.error("Error signing up:", err);
-  //     return null;
-  //   }
-  // },
 }));
 
 // Initialize authentication state
@@ -141,19 +88,20 @@ supabase.auth.getSession().then(({ data: { session } }) => {
   useAuthStore.getState().setUser(session?.user ?? null);
   useAuthStore.getState().setSession(session ?? null);
   useAuthStore.getState().setLoading(false);
+
+  if (session?.user?.email) {
+    useAuthStore.getState().subscribeToSessionUpdates(session.user.email);
+  }
 });
 
 // Listen for auth state changes
 supabase.auth.onAuthStateChange((event, session) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { user: currentUser, session: currentSession } =
-    useAuthStore.getState();
+  console.log("Auth state changed:", event, session);
+  useAuthStore.getState().setUser(session?.user ?? null);
+  useAuthStore.getState().setSession(session ?? null);
+  useAuthStore.getState().setLoading(false);
 
-  // Only update if the session has changed
-  if (session?.access_token !== currentSession?.access_token) {
-    console.log("Auth state changed:", event, session);
-    useAuthStore.getState().setUser(session?.user ?? null);
-    useAuthStore.getState().setSession(session ?? null);
-    useAuthStore.getState().setLoading(false);
+  if (session?.user?.email) {
+    useAuthStore.getState().subscribeToSessionUpdates(session.user.email);
   }
 });
