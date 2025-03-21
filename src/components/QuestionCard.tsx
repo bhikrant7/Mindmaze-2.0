@@ -43,8 +43,8 @@ const QuestionCard = () => {
         Puzzle {curr_quest?.id}
       </h1>
 
-      <div className="flex-col justify-center items-center aspect-auto shadow-lg w-full border-2 border-orange-400 rounded-lg p-4">
-        <p className="text-2xl mb-6">{curr_quest?.question_text}</p>
+      <div className="flex flex-col justify-center items-center gap-2.5 aspect-auto shadow-lg w-full border-2 border-orange-400 rounded-lg p-4">
+        <p className="text-2xl">{curr_quest?.question_text}</p>
 
         <div className="flex flex-row flex-wrap lg:flex-nowrap md:overflow-hidden gap-4">
           {curr_quest?.media_image && (
@@ -73,12 +73,13 @@ const QuestionCard = () => {
             // console.log('currQuest: ', curr_quest);
             setCurrAnswer(e.target.value) 
           }}
+          className="max-w-[20rem] py-6"
           placeholder="Type your answer here..."
         />
           <Button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[3px_3px_8px_rgba(255,149,68,0.4)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
+            className="group relative inline-flex font-semibold h-12 items-center w-max mt-6 justify-center overflow-hidden rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[3px_3px_8px_rgba(255,149,68,0.4)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
             >
               {isSubmitting ? (
                 <span>Submitting...</span>
