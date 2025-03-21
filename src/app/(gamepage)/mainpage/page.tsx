@@ -21,7 +21,7 @@ export default function Page() {
     if (!user) {
       router.push("/login");
     }
-  }, [user]);
+  }, [user,router]);
 
   return (
     <main className="min-h-screen flex flex-col">
