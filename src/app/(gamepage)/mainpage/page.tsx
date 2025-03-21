@@ -33,15 +33,6 @@ export default function Page() {
   }, [user, router]);
   return (
     <main className="min-h-screen flex flex-col">
-      {/* Logout Button */}
-      <div className="absolute top-2 left-4 sm:top-20 sm:left-20 flex justify-start">
-        <button
-          className="px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-base text-white bg-red-500 rounded-md shadow-md hover:bg-red-600 transition"
-        >
-          Log Out
-        </button>
-      </div>
-
       {/* Main Content Area */}
       <div className="flex-grow container mx-auto p-4">
         {/* Title */}
