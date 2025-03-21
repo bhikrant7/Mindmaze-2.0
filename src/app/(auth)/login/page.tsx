@@ -60,8 +60,8 @@ export default function LoginPage() {
           duration: 10000, // How long the toast stays (in ms)
           position: "top-center", // Position of the toast
           style: {
-            background: "rgba(19, 12, 28, 0.15)", // Dark with slight transparency
-            border: "1px solid #422d28", // Semi-transparent red border
+            background: "rgba(19, 12, 28, 0.15)", 
+            border: "1px solid #422d28", 
             color: "#ff4d4d",
             padding: "12px 16px",
             borderRadius: "8px",
