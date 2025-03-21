@@ -67,15 +67,36 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signOut: async () => {
     try {
-      await supabase
+      console.log("From authStore here: signing out");
+      const { data: sessionData, error: sessionError } =
+        await supabase.auth.getSession();
+
+      if (sessionError || !sessionData?.session?.refresh_token) {
+        throw new Error("Failed to retrieve session token");
+      }
+
+      // Ensure we are deleting the correct session
+      console.log(
+        "Deleting session with ID:",
+        sessionData.session.refresh_token
+      );
+
+      const { error: deleteError } = await supabase
         .from("sessions")
         .delete()
-        .eq("team_id", useAuthStore.getState().team?.id)
-        .eq("session_id", useAuthStore.getState().session?.refresh_token);
+        .eq("id", sessionData.session.refresh_token);
 
-      await supabase.auth.signOut().then(() => {
-        set({ user: null, team: null, session: null, activeSessions: 0 });
-      });
+      if (deleteError) {
+        console.error("Failed to delete session:", deleteError);
+      }
+
+      await supabase.auth.signOut();
+
+      // Remove session manually
+      localStorage.removeItem("supabase.auth.token");
+      sessionStorage.clear();
+
+      set({ user: null, team: null, session: null, activeSessions: 0 });
     } catch (err) {
       console.error("Error signing out:", err);
       set({ user: null, team: null, session: null, activeSessions: 0 });

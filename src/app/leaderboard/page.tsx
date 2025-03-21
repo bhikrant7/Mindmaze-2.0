@@ -28,38 +28,38 @@ const RankData = [
 
 export default function LeaderBoardPage() {
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-cover bg-center bg-no-repeat">
-      <h1 className="press-start-2p-regular sm:text-5xl md:text-5xl lg:text-7xl top font-bold text-white">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-fixed bg-auto bg-center bg-no-repeat">
+      <h1 className="press-start-2p-regular sm:text-5xl md:text-5xl lg:text-7xl top font-bold text-white mt-10">
         Leaderboard
       </h1>
-      <div className="w-full max-w-sm sm:max-w-md p-4 sm:p-8 my-20 space-y-4 sm:space-y-6 bg-gray/10 rounded-2xl shadow-lg shadow-black/90 backdrop-blur-[5.1px] border">
-        <div className="space-y-1 sm:space-y-2 text-center ">
+      <div className="w-full max-w-2xl p-10 my-10 space-y-4 bg-gray/10 rounded-2xl shadow-lg shadow-black/90 backdrop-blur-[5.1px] border">
+        <div className="space-y-2 text-center ">
           {/* <h1 className="text-2xl sm:text-3xl text- font-bold tracking-tight font-serif text-red-300">
             Rankings
           </h1> */}
           <Table>
-            <TableCaption className="text-sm italic">
-              {RankData.length} participating teams
-            </TableCaption>
-            <TableHeader>
-              <TableRow className="uppercase text-lg text-emerald-400 font-extrabold">
-                <TableHead className="w-[80px]">Rankings</TableHead>
-                <TableHead className="text-center">Name</TableHead>
-                <TableHead className="text-center">Score</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {RankData.map((data) => (
-                <TableRow key={data.Rankings}>
-                  <TableCell className="font-medium text-red-300">
-                    {data.Rankings}
-                  </TableCell>
-                  <TableCell className="text-teal-400">{data.Name}</TableCell>
-                  <TableCell className="text-green-400">{data.Score}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+  <TableCaption className="text-sm italic">
+    {RankData.length} participating teams
+  </TableCaption>
+  <TableHeader>
+    <TableRow className="uppercase text-lg font-extrabold">
+      <TableHead className="w-[120px] text-[#FFA500] text-center">Rank</TableHead>
+      <TableHead className="text-center text-[#00FFFF]">Name</TableHead>
+      <TableHead className="text-center text-[#7FFF00]">Score</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {RankData.map((data) => (
+      <TableRow key={data.Rankings}>
+        <TableCell className="font-medium text-[#FFA500] text-center ">
+          {data.Rankings}
+        </TableCell>
+        <TableCell className="text-[#00FFFF]">{data.Name}</TableCell>
+        <TableCell className="text-[#7FFF00]">{data.Score}</TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
         </div>
       </div>
     </div>
