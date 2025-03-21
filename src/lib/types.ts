@@ -28,7 +28,8 @@ export interface Question {
   question_text: string;
   media_image?: string; // URL of image (optional)
   media_video?: string; // URL of video (optional)
-  answer?: string;
+  correct_answer?: string;
+  user_answer?: string;
 }
 
 // Submissions Table

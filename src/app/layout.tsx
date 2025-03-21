@@ -1,9 +1,13 @@
+
+// "use client"
+
 import { ThemeProvider } from "next-themes";
 import type { Metadata } from "next";
 // import StatusBar from "@/components/StatusBar";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 // import AuthInitializer from "./_component/AuthInitializer";
+// import { useAuthStore } from "@/lib/store/authStore";
 
 
 export const metadata: Metadata = {
@@ -16,6 +20,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  // const { loading } = useAuthStore();
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-center bg-cover bg-[url('/background.png')]">
@@ -34,7 +40,7 @@ export default function RootLayout({
 
           {/* Main content should only scroll when content exceeds viewport height */}
           <main className="flex-1 overflow-y-auto">
-            {children}
+            { children}
             <Toaster />
           </main>
         </ThemeProvider>

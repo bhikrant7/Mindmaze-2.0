@@ -1,9 +1,7 @@
 "use client";
 
 import QuestionCard from "@/components/QuestionCard";
-import { getQuestion } from "@/lib/apiCalls/api";
-import { Question } from "@/lib/types";
-import { useEffect, useState } from "react";
+import {use, useEffect, useState } from "react";
 import { useQuestionStore } from "@/lib/store/questionStore";
 import React from 'react';
 import styled from 'styled-components';
@@ -16,57 +14,51 @@ export default function QuestionPage({
   // const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const questionpage = params.questionpage; // Corrected
-  const { curr_quest,  setCurrQuest } = useQuestionStore();
+  const questionpage = use(params).questionpage; // Corrected
+  const { questions, curr_quest, setCurrQuestByIndex } = useQuestionStore();
+
+  const setCurrentQuestion = () => {
+    try {
+      const questionId = parseInt(questionpage, 10);
+      setCurrQuestByIndex(questionId-1);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setError("Failed to load question");
+    }
+  }
 
   useEffect(() => {
-    const fetchQuestion = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const questionId = parseInt(questionpage, 10); // Convert string to number
+    setCurrentQuestion();
+  }, [questionpage, questions]);
 
-        const fetchedQuestion = await getQuestion(questionId);
-        console.log('fetchedQuestion: ', fetchedQuestion);
-        if (!fetchedQuestion) {
-          setError("Question not found");
-          return;
-        }
-        setCurrQuest(fetchedQuestion);
-      } catch (error) {
-        console.error("Error fetching question:", error);
-        setError("Failed to load question");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchQuestion();
-  }, [questionpage]);
-
-  if (loading) {
-    return (
-      <StyledWrapper>
-      <div className="loadingspinner">
-        <div id="square1" />
-        <div id="square2" />
-        <div id="square3" />
-        <div id="square4" />
-        <div id="square5" />
-      </div>
-    </StyledWrapper>
-    );
-  }
+  useEffect(() => {
+    console.log('questions: ', questions);
+  }, [questions]);
 
   if (error) {
     return <div className="text-red-500">{error}</div>;
   }
 
-  if (!curr_quest) {
-    return <div>No question found</div>;
+  if (loading) {
+      return (
+        <StyledWrapper>
+          <div className="loadingspinner">
+            <div id="square1" />
+            <div id="square2" />
+            <div id="square3" />
+            <div id="square4" />
+            <div id="square5" />
+          </div>
+        </StyledWrapper>
+      );
   }
 
-  return <QuestionCard question={curr_quest} />;
+  if (loading === false && !curr_quest) {
+    return <div>No question found</div>; // Prevents empty QuestionCard from rendering
+  }
+
+  return <QuestionCard />;
 }
 
 

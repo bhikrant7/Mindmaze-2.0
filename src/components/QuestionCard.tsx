@@ -1,39 +1,56 @@
-import { Question } from "@/lib/types";
-import React, { useState } from "react";
+import { Question, UUID } from "@/lib/types";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Input } from "./ui/input";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useQuestionStore } from "@/lib/store/questionStore";
 import { Button } from "@/components/ui/button";
 import { createSubmission } from "@/lib/apiCalls/api";
+import { verifyAnswer } from "@/lib/helpers/common";
 
-const QuestionCard = ({ question }: { question: Partial<Question> | null }) => {
+const QuestionCard = () => {
   const { team } = useAuthStore();
-  const { setCurrAnswer } = useQuestionStore();
+  const { curr_quest, setCurrAnswer } = useQuestionStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  
   const handleSubmit = async () => {
     try {
-      const newSubmission = await createSubmission(team?.id, question?.id, question?.answer)
+      if (!curr_quest?.correct_answer) {
+        console.log('No correct answer available');
+        return;
+      }
+      setIsSubmitting(true);
+      const isCorrect = verifyAnswer(curr_quest?.user_answer, curr_quest?.correct_answer);
+      const currQuest = {
+        team_id: team?.id,
+        question_id: curr_quest.id,
+        submitted_answer: curr_quest.user_answer,
+        is_correct: isCorrect,
+      };
+      console.log('currQuest: ', currQuest);
+      const newSubmission = await createSubmission(team?.id as UUID, curr_quest?.id, curr_quest?.user_answer as string, isCorrect);
       console.log('newSubmission: ', newSubmission);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsSubmitting(false);
     }
   }
   
   return (
     <div className="p-6">
       <h1 className="flex justify-center press-start-2p-regular text-5xl font-bold my-10 mb-20">
-        Puzzle {question?.id}
+        Puzzle {curr_quest?.id}
       </h1>
 
       <div className="flex-col justify-center items-center aspect-auto shadow-lg w-full border-2 border-orange-400 rounded-lg p-4">
-        <p className="text-2xl mb-6">{question?.question_text}</p>
+        <p className="text-2xl mb-6">{curr_quest?.question_text}</p>
 
         <div className="flex flex-row flex-wrap lg:flex-nowrap md:overflow-hidden gap-4">
-          {question?.media_image && (
+          {curr_quest?.media_image && (
             <div className="relative w-[600px] h-[400px]">
               <Image
-                src={question?.media_image}
+                src={curr_quest?.media_image}
                 alt="Question media"
                 layout="fill"
                 objectFit="contain" // Ensures image fits properly
@@ -42,27 +59,31 @@ const QuestionCard = ({ question }: { question: Partial<Question> | null }) => {
               />
             </div>
           )}
-          {question?.media_video && (
+          {curr_quest?.media_video && (
             <video controls className="mb-4 rounded-lg max-w-full">
-              <source src={question?.media_video} type="video/mp4" />
+              <source src={curr_quest?.media_video} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           )}
         </div>
         <Input 
-          value={question?.answer}
+          value={curr_quest?.user_answer}
           width="30%"
-          onChange={(e) => { setCurrAnswer(e.target.value) }}
+          onChange={(e) => { 
+            // console.log('currQuest: ', curr_quest);
+            setCurrAnswer(e.target.value) 
+          }}
           placeholder="Type your answer here..."
         />
           <Button
               onClick={handleSubmit}
+              disabled={isSubmitting}
               className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[3px_3px_8px_rgba(255,149,68,0.4)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
             >
               {isSubmitting ? (
-                <span>Submit</span>
-              ) : (
                 <span>Submitting...</span>
+              ) : (
+                <span>Submit</span>
               )}
               <div className="ml-1 transition group-hover:translate-x-2">
                 <svg
