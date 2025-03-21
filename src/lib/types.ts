@@ -13,6 +13,14 @@ export interface Team {
   session_count?: number|0;
 }
 
+// Session Table
+export interface AuthSession{
+  id?: UUID;
+  team_id:string;
+  created_at?:Date;
+  email?:string;
+}
+
 
 // Questions Table
 export interface Question {

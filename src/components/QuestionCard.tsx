@@ -30,11 +30,11 @@ const QuestionCard = ({ question }: { question: Partial<Question> | null }) => {
   
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4 underline">
-        Question. {question?.id}
+      <h1 className="flex justify-center press-start-2p-regular text-5xl font-bold my-10 mb-20">
+        Puzzle {question?.id}
       </h1>
 
-      <div className="aspect-auto shadow-lg w-full border-2 border-orange-400 rounded-lg p-4">
+      <div className="flex-col justify-center items-center aspect-auto shadow-lg w-full border-2 border-orange-400 rounded-lg p-4">
         <p className="text-2xl mb-6">{question?.question_text}</p>
 
         <div className="flex flex-row flex-wrap lg:flex-nowrap md:overflow-hidden gap-4">

@@ -52,14 +52,6 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
 
 export async function createSubmission(teamId: number | undefined, questionId: number | undefined, isCorrect: boolean) {
   try {
-
-    // const { data:question, error:questionError } = await supabase
-    //   .from('questions')
-    //   .select('*')
-    //   .eq('id', questionId)
-    //   .single();
-
-    // console.log('question', question);
     const { data:submission, error:submissionError } = await supabase
     .from('submissions')
     .insert([
