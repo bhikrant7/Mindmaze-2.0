@@ -1,5 +1,5 @@
 import { supabase } from "../supabaseClient";
-import { Question } from "@/lib/types";
+import { Question, UUID } from "@/lib/types";
 
 //getQuestion
 export async function getQuestion(id: number): Promise<Question | null> {
@@ -50,23 +50,31 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
 
 
 
-export async function createSubmission(teamId: number | undefined, questionId: number | undefined, isCorrect: boolean) {
-  try {
-    const { data:submission, error:submissionError } = await supabase
-    .from('submissions')
-    .insert([
-      {
-        team_id: teamId,
-        question_id: questionId,
-        is_correct: isCorrect
-      },
-    ])
-    .select('*');
+export async function createSubmission(teamId: UUID, questionId: number | undefined, user_answer: string, isCorrect: boolean) {
+    try {
+      const newSubmission = {
+      team_id: teamId,
+      question_id: questionId,
+      submitted_answer: user_answer,
+      is_correct: isCorrect,
+    };
+    console.log('newSubmission: ', newSubmission);
+    // const { data:submission, error:submissionError } = await supabase
+    // .from('submissions')
+    // .insert([
+    //   {
+    //     team_id: teamId,
+    //     question_id: questionId,
+    //     submitted_answer: user_answer,
+    //     is_correct: isCorrect,
+    //   },
+    // ])
+    // .select('*');
 
-    if (submissionError) {
-      return null;
-    }
-    return submission;
+    // if (submissionError) {
+    //   return null;
+    // }
+    // return submission;
   } catch (error) {
     return null;
   }

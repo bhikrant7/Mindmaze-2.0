@@ -1,4 +1,4 @@
-import { Question } from "@/lib/types";
+import { Question, UUID } from "@/lib/types";
 import React, { useState } from "react";
 import Image from "next/image";
 import { Input } from "./ui/input";
@@ -19,7 +19,7 @@ const QuestionCard = ({ question }: { question: Partial<Question> | null }) => {
         return;
       }
       const isCorrect = verifyAnswer(question?.user_answer, question?.correct_answer);
-      const newSubmission = await createSubmission(team?.id, question?.id, isCorrect);
+      const newSubmission = await createSubmission(team?.id as UUID, question?.id, question?.user_answer as string, isCorrect);
       console.log('newSubmission: ', newSubmission);
     } catch (error) {
       console.error(error);
