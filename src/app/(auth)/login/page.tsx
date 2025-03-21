@@ -17,7 +17,7 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [teamForm, setTeamForm] = useState<Team>({
@@ -25,7 +25,7 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  const { loading, user, setTeam, setSession} = useAuthStore();
+  const { loading, user, setTeam, setSession } = useAuthStore();
   const router = useRouter();
 
   // Handle login
@@ -55,8 +55,7 @@ export default function LoginPage() {
         .eq("team_id", existingTeam.id);
 
       if (activeSessions && activeSessions.length >= 1) {
-
-        console.log("Active session detected.Please log out there first...")
+        console.log("Active session detected.Please log out there first...");
         toast.error("Active session detected.Please log out there first...", {
           duration: 10000, // How long the toast stays (in ms)
           position: "top-center", // Position of the toast
@@ -253,7 +252,7 @@ export default function LoginPage() {
     if (user && !loading) {
       router.push("/mainpage");
     }
-  }, [user, loading]);
+  }, [user, loading, router]);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-cover bg-center bg-no-repeat">

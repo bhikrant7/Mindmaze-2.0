@@ -73,8 +73,9 @@ export const useAuthStore = create<AuthState>((set) => ({
         .eq("team_id", useAuthStore.getState().team?.id)
         .eq("session_id", useAuthStore.getState().session?.refresh_token);
 
-      await supabase.auth.signOut();
-      set({ user: null, team: null, session: null, activeSessions: 0 });
+      await supabase.auth.signOut().then(() => {
+        set({ user: null, team: null, session: null, activeSessions: 0 });
+      });
     } catch (err) {
       console.error("Error signing out:", err);
       set({ user: null, team: null, session: null, activeSessions: 0 });
