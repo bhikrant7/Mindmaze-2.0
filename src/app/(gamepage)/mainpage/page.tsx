@@ -38,7 +38,7 @@ export default function Page() {
       //     <div id="square5" />
       //   </div>
       // </StyledWrapper>;
-      router.replace("/login");
+      router.push("/login");
     }
   }, [user, router]);
   
