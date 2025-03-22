@@ -5,14 +5,12 @@ interface questionState {
   questions: Partial<Question>[] | null; //all quesitons
   curr_quest: Partial<Question | null>; //current question
   corr_questions: Partial<Question[] | null>; //correct questions
-  
+
   setCurrQuest: (curr_quest: Partial<Question | null>) => void;
   setCurrAnswer: (curr_answer: string) => void;
   setQuestions: (questions: Partial<Question>[] | null) => void;
   setCorrQuest: (corr_questions: Partial<Question[] | null>) => void;
   setCurrQuestByIndex: (index: number) => void;
-
-  
 }
 
 export const useQuestionStore = create<questionState>((set) => ({

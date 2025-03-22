@@ -7,13 +7,13 @@ import { useQuestionStore } from "@/lib/store/questionStore";
 import Image from "next/image";
 import { getAllQuestion } from "@/lib/apiCalls/api";
 import { Question } from "@/lib/types";
-import { StyledWrapper } from "@/components/StyledWrapper";
+// import { StyledWrapper } from "@/components/StyledWrapper";
 import SignOutButton from "@/components/SignOutButton";
 
 export default function Page() {
   const router = useRouter();
   const [completed, setCompleted] = useState<boolean[]>(Array(15).fill(false));
-  const { user } = useAuthStore();
+  const { activeSessions } = useAuthStore();
   const { questions, setQuestions } = useQuestionStore();
 
   // const toggleCompletion = (index: number) => {
@@ -26,11 +26,19 @@ export default function Page() {
   // };
 
   useEffect(() => {
-    if (!user) {
-      <StyledWrapper />;
+    if (activeSessions && activeSessions < 1) {
+      // <StyledWrapper>
+      //   <div className="loadingspinner">
+      //     <div id="square1" />
+      //     <div id="square2" />
+      //     <div id="square3" />
+      //     <div id="square4" />
+      //     <div id="square5" />
+      //   </div>
+      // </StyledWrapper>;
       router.replace("/login");
     }
-  }, [user, router]);
+  }, [activeSessions, router]);
   return (
     <main className="min-h-screen flex flex-col">
       {/* Main Content Area */}
