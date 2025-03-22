@@ -82,7 +82,7 @@ export default function LeaderBoardPage({
   // }, {} as Record<string, string>);
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-fixed bg-auto bg-center bg-no-repeat">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-auto bg-center bg-no-repeat">
       <h1 className="press-start-2p-regular sm:text-5xl md:text-5xl lg:text-7xl font-bold text-white mt-10">
         Leaderboard
       </h1>

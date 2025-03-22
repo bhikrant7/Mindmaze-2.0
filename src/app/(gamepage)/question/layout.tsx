@@ -13,6 +13,18 @@ export default function GamePageLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigateAndRefresh = () => {
+    if (isLoading) return;
+
+    setIsLoading(true);
+    router.push("/mainpage");
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 500); // min 500ms need to make sure the page transition before refresh
+  };
 
   return (
     <div className="h-screen w-full p-6">
@@ -74,5 +86,12 @@ const StyledWrapper = styled.div`
     background-color: #aa5b06;
     box-shadow: none;
     transform: translateY(4px) translateX(4px);
+  }
+
+  .comic-button:disabled {
+    background-color: #888;
+    cursor: not-allowed;
+    box-shadow: none;
+    border: 2px solid #666;
   }
 `;
