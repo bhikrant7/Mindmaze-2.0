@@ -1,10 +1,9 @@
-"use client";
-
 import { create } from "zustand";
 import { supabase } from "../supabaseClient";
 import { Session, User } from "@supabase/supabase-js";
 import { Team } from "../types";
 
+// Define your state interface
 interface AuthState {
   user: User | null;
   team: Partial<Team> | null;
@@ -23,32 +22,35 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  team: null,
+  team: typeof window !== "undefined" ? JSON.parse(localStorage.getItem("auth-team") || "null") : null, // Only access localStorage on the client
   loading: true,
   session: null,
   activeSessions: 0,
 
   setUser: (user: User | null) => set({ user }),
-  setTeam: (team: Partial<Team> | null) => set({ team }),
+  setTeam: (team: Partial<Team> | null) => {
+    if (typeof window !== "undefined") { // Check if we're on the client-side
+      localStorage.setItem("auth-team", JSON.stringify(team)); // Persist team to localStorage
+    }
+    set({ team });
+  },
   setSession: (session: Session | null) => set({ session }),
   setLoading: (loading: boolean) => set({ loading }),
   setActiveSessions: (count: number) => set({ activeSessions: count }),
 
   subscribeToSessionUpdates: (email: string) => {
-    // Subscribe to changes on the sessions table for the current email
     const channel = supabase
       .channel(`session_updates_${email}`)
       .on(
         "postgres_changes",
         {
-          event: "*", // listen for INSERT, UPDATE, and DELETE events
+          event: "*",
           schema: "public",
           table: "sessions",
           filter: `email=eq.${email}`,
         },
         async (payload) => {
           console.log("Session change detected:", payload);
-          // Count active sessions directly from the sessions table
           const { data: sessions, error } = await supabase
             .from("sessions")
             .select("*")
@@ -67,19 +69,11 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signOut: async () => {
     try {
-      console.log("From authStore here: signing out");
-      const { data: sessionData, error: sessionError } =
-        await supabase.auth.getSession();
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
 
       if (sessionError || !sessionData?.session?.refresh_token) {
         throw new Error("Failed to retrieve session token");
       }
-
-      // Ensure we are deleting the correct session
-      console.log(
-        "Deleting session with ID:",
-        sessionData.session.refresh_token
-      );
 
       const { error: deleteError } = await supabase
         .from("sessions")
@@ -92,8 +86,10 @@ export const useAuthStore = create<AuthState>((set) => ({
 
       await supabase.auth.signOut();
 
-      // Remove session manually
-      localStorage.removeItem("supabase.auth.token");
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("supabase.auth.token");
+        localStorage.removeItem("auth-team");
+      }
       sessionStorage.clear();
 
       set({ user: null, team: null, session: null, activeSessions: 0 });
@@ -105,20 +101,28 @@ export const useAuthStore = create<AuthState>((set) => ({
 }));
 
 // Initialize authentication state
-supabase.auth.getSession().then(({ data: { session } }) => {
-  console.log("Initial session:", session);
+supabase.auth.getSession().then(async ({ data: { session } }) => {
   useAuthStore.getState().setUser(session?.user ?? null);
   useAuthStore.getState().setSession(session ?? null);
   useAuthStore.getState().setLoading(false);
 
   if (session?.user?.email) {
     useAuthStore.getState().subscribeToSessionUpdates(session.user.email);
+    if (!useAuthStore.getState().team) {
+      const { data: team, error } = await supabase
+        .from("teams")
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+      if (!error) {
+        useAuthStore.getState().setTeam(team);
+      }
+    }
   }
 });
 
 // Listen for auth state changes
 supabase.auth.onAuthStateChange((event, session) => {
-  console.log("Auth state changed:", event, session);
   useAuthStore.getState().setUser(session?.user ?? null);
   useAuthStore.getState().setSession(session ?? null);
   useAuthStore.getState().setLoading(false);

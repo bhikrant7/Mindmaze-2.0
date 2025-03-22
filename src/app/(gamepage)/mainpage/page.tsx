@@ -14,7 +14,7 @@ export default function Page() {
   const router = useRouter();
   const [completed, setCompleted] = useState<boolean[]>(Array(15).fill(false));
   const { user } = useAuthStore();
-  const { questions, setQuestions } = useQuestionStore();
+  const { questions, corr_questions, setQuestions } = useQuestionStore();
 
   // const toggleCompletion = (index: number) => {
   //   router.push(`/question/${index + 1}`);
@@ -24,6 +24,8 @@ export default function Page() {
   //     return newCompleted;
   //   });
   // };
+
+  console.log('corr_questions: ', corr_questions);
 
   useEffect(() => {
     if (!user) {
@@ -36,9 +38,10 @@ export default function Page() {
       //     <div id="square5" />
       //   </div>
       // </StyledWrapper>;
-      router.replace("/login");
+      router.push("/login");
     }
   }, [user, router]);
+  
   return (
     <main className="min-h-screen flex flex-col">
       {/* Main Content Area */}
@@ -59,7 +62,7 @@ export default function Page() {
               className="relative px-3 py-4 sm:px-4 sm:py-6 rounded-md text-white text-lg sm:text-2xl font-semibold shadow-md transition hover:scale-105 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600"
             >
               Puzzle {index + 1}
-              {completed[index] && (
+              {corr_questions?.some(q => q.question_id === questions[index].id) && (
                 <Image
                   src="/tick_white.png"
                   alt="Completed"

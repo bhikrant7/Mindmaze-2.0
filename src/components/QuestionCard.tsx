@@ -16,12 +16,19 @@ const QuestionCard = () => {
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
+    if (!curr_quest || curr_quest.id === undefined) {
+      console.log("No current question available");
+      return;
+    }
+
+    if (!curr_quest.correct_answer) {
+      console.log("No correct answer available");
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      if (!curr_quest?.correct_answer) {
-        console.log("No correct answer available");
-        return;
-      }
-      setIsSubmitting(true);
       const isCorrect = verifyAnswer(
         curr_quest?.user_answer,
         curr_quest?.correct_answer
@@ -79,8 +86,9 @@ const QuestionCard = () => {
           )}
         </div>
         <Input
-          value={curr_quest?.user_answer}
+          value={curr_quest?.user_answer||""}
           width="30%"
+          type="string"
           onChange={(e) => {
             // console.log('currQuest: ', curr_quest);
             setCurrAnswer(e.target.value);
