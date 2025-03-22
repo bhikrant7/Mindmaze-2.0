@@ -13,18 +13,18 @@ export default function GamePageLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
-  const navigateAndRefresh = () => {
-    if (isLoading) return;
+  // const navigateAndRefresh = () => {
+  //   if (isLoading) return;
 
-    setIsLoading(true);
-    router.push("/mainpage");
+  //   setIsLoading(true);
+  //   router.push("/mainpage");
 
-    setTimeout(() => {
-      window.location.reload();
-    }, 500); // min 500ms need to make sure the page transition before refresh
-  };
+  //   setTimeout(() => {
+  //     window.location.reload();
+  //   }, 500); // min 500ms need to make sure the page transition before refresh
+  // };
 
   return (
     <div className="h-screen w-full p-6">

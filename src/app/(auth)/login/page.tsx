@@ -10,6 +10,7 @@ import { useAuthStore } from "@/lib/store/authStore";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import toast from "react-hot-toast";
+import useLoadingStore from "@/lib/store/loadingStore";
 
 export default function LoginPage() {
   const [teamForm, setTeamForm] = useState<Team>({
@@ -282,7 +283,14 @@ export default function LoginPage() {
     }
 
     // navigate to main page after successful authentication
+    useLoadingStore.getState().setGlobalLoading(true);
     router.push("/mainpage");
+    setTimeout(() => {
+                 
+      // window.location.reload();
+      useLoadingStore.getState().setGlobalLoading(false);
+    }, 1000); 
+    
   };
 
   // handle form input changes
@@ -296,7 +304,13 @@ export default function LoginPage() {
   //redirect to main page if user is authenticated
   useEffect(() => {
     if (user && !loading) {
+      useLoadingStore.getState().setGlobalLoading(true);
       router.push("/mainpage");
+      setTimeout(() => {
+                 
+        // window.location.reload();
+        useLoadingStore.getState().setGlobalLoading(false);
+      }, 500);
     }
   }, [user, loading, router]);
 
