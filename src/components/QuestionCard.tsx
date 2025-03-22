@@ -37,7 +37,7 @@ const QuestionCard = () => {
       );
       
       if (!isCorrect) {
-        toast.error("Wrong answer! Try Again");
+       
       } else {
         setIsSolved(true);
       }
