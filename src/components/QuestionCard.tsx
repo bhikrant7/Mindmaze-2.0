@@ -37,12 +37,12 @@ const QuestionCard = () => {
       console.log('currQuest: ', currQuest);
       const newSubmission = await createSubmission(team?.id as UUID, curr_quest?.id, curr_quest?.user_answer as string, isCorrect,team?.team_name as string);
       console.log('newSubmission: ', newSubmission);
-      if (newSubmission[0].is_correct) {
-        updateQuestionByIndex(curr_quest.id - 1, {
-          ...curr_quest,
-          is_solved: true
-        })
-      }
+      // if (newSubmission[0]?.is_correct) {
+      //   updateQuestionByIndex(curr_quest.id - 1, {
+      //     ...curr_quest,
+      //     is_solved: true
+      //   })
+      // }
     } catch (error) {
       console.error(error);
     } finally {
