@@ -46,6 +46,30 @@ export default function LoginPage() {
       .maybeSingle();
 
     if (existingTeam) {
+      if (
+        existingTeam.team_name !== teamForm.team_name ||
+        existingTeam.password !== teamForm.password
+      ) {
+        await supabase.auth.signOut();
+        console.error("User already exists with different credentials.");
+        toast.error("User already exists with different credentials.", {
+          duration: 10000,
+          position: "top-center",
+          style: {
+            background: "rgba(19, 12, 28, 0.15)",
+            border: "1px solid #422d28",
+            color: "#ff4d4d",
+            padding: "12px 16px",
+            borderRadius: "8px",
+            backdropFilter: "blur(8px)",
+          },
+          iconTheme: {
+            primary: "#ff4d4d",
+            secondary: "#422d28",
+          },
+        });
+        return;
+      }
       console.log("Existing team found. Signing in...");
 
       // Check active sessions for this team
