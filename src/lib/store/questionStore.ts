@@ -7,7 +7,10 @@ interface questionState {
   corr_questions: Partial<SolvedQuestion>[] | null; //correct questions
   setCurrQuest: (curr_quest: Partial<Question | null>) => void;
   setCurrAnswer: (curr_answer: string) => void;
-  updateQuestionByIndex: (indexToUpdate: number, updatedQuestionItem: Partial<Question>) => void;
+  updateQuestionByIndex: (
+    indexToUpdate: number,
+    updatedQuestionItem: Partial<Question>
+  ) => void;
   setQuestions: (questions: Partial<Question>[] | null) => void;
   setCorrQuest: (corr_questions: Partial<SolvedQuestion>[] | null) => void;
   setCurrQuestByIndex: (index: number) => void;
@@ -15,7 +18,16 @@ interface questionState {
 
 export const useQuestionStore = create<questionState>((set) => ({
   questions: [],
-  curr_quest: null,
+  curr_quest: {
+    id: 0,
+    question_text: "",
+    media_image: "", // URL of image (optional)
+    media_video: "", // URL of video (optional)
+    correct_answer: "",
+    user_answer: "",
+    is_submitted: false,
+    is_solved: false,
+  },
   corr_questions: [],
   setCurrQuest: (curr_quest) => set({ curr_quest }),
   setCurrAnswer: (curr_answer: string) =>
@@ -24,13 +36,18 @@ export const useQuestionStore = create<questionState>((set) => ({
         ? { ...state.curr_quest, user_answer: curr_answer } // Update existing question
         : { user_answer: curr_answer }, // Create a new object if curr_quest is null
     })),
-  updateQuestionByIndex: (indexToUpdate: number | undefined, updatedQuestionItem: Partial<Question>) => {
+  updateQuestionByIndex: (
+    indexToUpdate: number | undefined,
+    updatedQuestionItem: Partial<Question>
+  ) => {
     set((state) => {
-      let updatedQuestions = state.questions?.map((question: Partial<Question>, index: number) => {
-        return (indexToUpdate === index) ? updatedQuestionItem : question;
-      })
+      const updatedQuestions = state.questions?.map(
+        (question: Partial<Question>, index: number) => {
+          return indexToUpdate === index ? updatedQuestionItem : question;
+        }
+      );
       return { questions: updatedQuestions };
-    })
+    });
   },
   setQuestions: (questions) => set({ questions }),
   setCorrQuest: (corr_questions) => set({ corr_questions }),
