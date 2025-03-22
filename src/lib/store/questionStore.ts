@@ -11,8 +11,6 @@ interface questionState {
   setQuestions: (questions: Partial<Question>[] | null) => void;
   setCorrQuest: (corr_questions: Partial<Question[] | null>) => void;
   setCurrQuestByIndex: (index: number) => void;
-
-  
 }
 
 export const useQuestionStore = create<questionState>((set) => ({

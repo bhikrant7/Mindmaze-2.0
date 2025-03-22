@@ -1,5 +1,5 @@
-import { Question, UUID } from "@/lib/types";
-import React, { useEffect, useState } from "react";
+import {  UUID } from "@/lib/types";
+import React, {  useState } from "react";
 import Image from "next/image";
 import { Input } from "./ui/input";
 import { useAuthStore } from "@/lib/store/authStore";
@@ -35,7 +35,7 @@ const QuestionCard = () => {
         is_correct: isCorrect,
       };
       console.log('currQuest: ', currQuest);
-      const newSubmission = await createSubmission(team?.id as UUID, curr_quest?.id, curr_quest?.user_answer as string, isCorrect);
+      const newSubmission = await createSubmission(team?.id as UUID, curr_quest?.id, curr_quest?.user_answer as string, isCorrect,team?.team_name as string);
       console.log('newSubmission: ', newSubmission);
       if (newSubmission[0].is_correct) {
         updateQuestionByIndex(curr_quest.id - 1, {
