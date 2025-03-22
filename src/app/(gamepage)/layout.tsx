@@ -3,7 +3,7 @@
 // import { useAuthStore } from "@/lib/store/authStore";
 // import { StyledWrapper } from "@/components/StyledWrapper";
 import { getAllQuestion, getSolvedQuestions } from "@/lib/apiCalls/api";
-import { Question } from "@/lib/types";
+import { Question, UUID } from "@/lib/types";
 import bcrypt from "bcryptjs";
 import { useQuestionStore } from "@/lib/store/questionStore";
 import { useEffect } from "react";
@@ -16,7 +16,7 @@ export default function GamePageLayout({
 }) {
   // const {loading} = useAuthStore();
   const { team } = useAuthStore();
-  const { setQuestions, setCorrQuest } = useQuestionStore();
+  const { questions, setQuestions, setCorrQuest } = useQuestionStore();
 
   const fetchAllQuestions = async () => {
     try {
@@ -40,7 +40,7 @@ export default function GamePageLayout({
 
   const fetchSolvedQuestions = async () => {
     try {
-      const solvedQuestions = await getSolvedQuestions(team?.id);
+      const solvedQuestions = await getSolvedQuestions(team?.id as UUID);
       setCorrQuest(solvedQuestions);
     } catch (error) {
       console.error(error);
@@ -49,8 +49,13 @@ export default function GamePageLayout({
 
   useEffect(() => {
     fetchAllQuestions();
-    fetchSolvedQuestions();
   }, []);
+
+  useEffect(() => {
+    if (team?.id) {
+      fetchSolvedQuestions();
+    }
+  }, [team]);
 
   return <div className="h-screen w-full p-6">{children}</div>;
 }
