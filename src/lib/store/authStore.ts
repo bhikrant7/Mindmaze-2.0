@@ -22,14 +22,18 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
-  team: typeof window !== "undefined" ? JSON.parse(localStorage.getItem("auth-team") || "null") : null, // Only access localStorage on the client
+  team:
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("auth-team") || "null")
+      : null, // Only access localStorage on the client
   loading: true,
   session: null,
   activeSessions: 0,
 
   setUser: (user: User | null) => set({ user }),
   setTeam: (team: Partial<Team> | null) => {
-    if (typeof window !== "undefined") { // Check if we're on the client-side
+    if (typeof window !== "undefined") {
+      // Check if we're on the client-side
       localStorage.setItem("auth-team", JSON.stringify(team)); // Persist team to localStorage
     }
     set({ team });
@@ -38,6 +42,37 @@ export const useAuthStore = create<AuthState>((set) => ({
   setLoading: (loading: boolean) => set({ loading }),
   setActiveSessions: (count: number) => set({ activeSessions: count }),
 
+  // subscribeToSessionUpdates: (email: string) => {
+  //   const channel = supabase
+  //     .channel(`session_updates_${email}`)
+  //     .on(
+  //       "postgres_changes",
+  //       {
+  //         event: "*",
+  //         schema: "public",
+  //         table: "sessions",
+  //         filter: `email=eq.${email}`,
+  //       },
+  //       async (payload) => {
+  //         console.log("Session change detected:", payload);
+  //         const { data: sessions, error } = await supabase
+  //           .from("sessions")
+  //           .select("*")
+  //           .eq("email", email);
+  //         if (!error && sessions) {
+  //           if(sessions.length > 5){
+
+  //           }
+  //           set({ activeSessions: sessions.length });
+  //         }
+  //       }
+  //     )
+  //     .subscribe();
+
+  //   return () => {
+  //     supabase.removeChannel(channel);
+  //   };
+  // },
   subscribeToSessionUpdates: (email: string) => {
     const channel = supabase
       .channel(`session_updates_${email}`)
@@ -56,6 +91,8 @@ export const useAuthStore = create<AuthState>((set) => ({
             .select("*")
             .eq("email", email);
           if (!error && sessions) {
+            if (sessions.length > 5) {
+            }
             set({ activeSessions: sessions.length });
           }
         }
@@ -69,7 +106,8 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   signOut: async () => {
     try {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      const { data: sessionData, error: sessionError } =
+        await supabase.auth.getSession();
 
       if (sessionError || !sessionData?.session?.refresh_token) {
         throw new Error("Failed to retrieve session token");
