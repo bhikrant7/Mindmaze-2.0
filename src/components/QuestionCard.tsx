@@ -10,16 +10,23 @@ import { verifyAnswer } from "@/lib/helpers/common";
 
 const QuestionCard = () => {
   const { team } = useAuthStore();
-  const { curr_quest, setCurrAnswer } = useQuestionStore();
+  const { curr_quest, updateQuestionByIndex, setCurrAnswer } = useQuestionStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   
   const handleSubmit = async () => {
+    if (!curr_quest || curr_quest.id === undefined) {
+      console.log('No current question available');
+      return;
+    }
+  
+    if (!curr_quest.correct_answer) {
+      console.log('No correct answer available');
+      return;
+    }
+  
+    setIsSubmitting(true);
+
     try {
-      if (!curr_quest?.correct_answer) {
-        console.log('No correct answer available');
-        return;
-      }
-      setIsSubmitting(true);
       const isCorrect = verifyAnswer(curr_quest?.user_answer, curr_quest?.correct_answer);
       const currQuest = {
         team_id: team?.id,
@@ -30,6 +37,12 @@ const QuestionCard = () => {
       console.log('currQuest: ', currQuest);
       const newSubmission = await createSubmission(team?.id as UUID, curr_quest?.id, curr_quest?.user_answer as string, isCorrect);
       console.log('newSubmission: ', newSubmission);
+      if (newSubmission[0].is_correct) {
+        updateQuestionByIndex(curr_quest.id - 1, {
+          ...curr_quest,
+          is_solved: true
+        })
+      }
     } catch (error) {
       console.error(error);
     } finally {

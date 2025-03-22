@@ -48,7 +48,12 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
   }
 }
 
-
+// export async function getSolvedQuestionsByUser(): Promise<Partial<Question>[] | null> {
+//   try {
+//     const { data, error } = await supabase
+//       .from("solved_questions")
+//   }
+// }
 
 export async function createSubmission(teamId: UUID, questionId: number | undefined, user_answer: string, isCorrect: boolean) {
     try {
@@ -62,7 +67,8 @@ export async function createSubmission(teamId: UUID, questionId: number | undefi
         is_correct: isCorrect,
       },
     ])
-    .select();
+    .select()
+    .single();
 
     if (submissionError) {
       return null;
