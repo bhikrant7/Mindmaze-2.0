@@ -40,6 +40,7 @@ export interface Submission {
   question_id: number;
   submitted_answer: string;
   is_correct: boolean;
+  team_name: string;
   submitted_at: string; // Timestamp
 }
 
@@ -48,13 +49,15 @@ export interface SolvedQuestion {
   id: number;
   team_id: UUID;
   question_id: number;
+  team_name: string;
   solved_at: string; // Timestamp
 }
 
 // Leaderboard Table
 export interface Leaderboard {
-  team_id: UUID;
+  team_id: UUID|"";
   total_score: number;
+  team_name: string;
   rank?: number; // Nullable
 }
 
