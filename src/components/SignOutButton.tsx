@@ -12,6 +12,18 @@ export default function SignOutButton() {
       toast.success("Signed Out successfully", {
         duration: 10000,
         position: "top-center",
+        style: {
+          background: "rgba(19, 12, 28, 0.15)",
+          border: "1px solid #422d28",
+          color: "#00AB66",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          backdropFilter: "blur(8px)",
+        },
+        iconTheme: {
+          primary: "#00AB66",
+          secondary: "#FFFFFF",
+        },
       });
     });
   };
