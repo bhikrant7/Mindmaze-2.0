@@ -1,5 +1,5 @@
 import { supabase } from "../supabaseClient";
-import { Question, UUID } from "@/lib/types";
+import { Question, SolvedQuestion, UUID } from "@/lib/types";
 
 //getQuestion
 export async function getQuestion(id: number): Promise<Question | null> {
@@ -44,6 +44,26 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
     return data as Partial<Question>[];
   } catch (err) {
     console.error("Error in getting :", err);
+    return null;
+  }
+}
+
+export async function getSolvedQuestions(team_id: UUID | undefined): Promise<Partial<SolvedQuestion>[] | null> {
+  try {
+    console.log('getSolvedQuestions');
+    console.log('team_id: ', team_id);
+    const { data, error } = await supabase
+      .from("solved_questions")
+      .select("*")
+      .eq('team_id', team_id);
+
+    if (error) {
+      return null;
+    }
+    console.log('data: ', data);
+    return data as Partial<SolvedQuestion>[];
+  } catch (error) {
+    console.error("Error in getting: ", error);
     return null;
   }
 }

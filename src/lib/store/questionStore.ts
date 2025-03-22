@@ -1,15 +1,15 @@
 import { create } from "zustand";
-import { Question } from "../types";
+import { Question, SolvedQuestion } from "../types";
 
 interface questionState {
   questions: Partial<Question>[] | null; //all quesitons
   curr_quest: Partial<Question | null>; //current question
-  corr_questions: Partial<Question[] | null>; //correct questions
+  corr_questions: Partial<SolvedQuestion>[] | null; //correct questions
   setCurrQuest: (curr_quest: Partial<Question | null>) => void;
   setCurrAnswer: (curr_answer: string) => void;
   updateQuestionByIndex: (indexToUpdate: number, updatedQuestionItem: Partial<Question>) => void;
   setQuestions: (questions: Partial<Question>[] | null) => void;
-  setCorrQuest: (corr_questions: Partial<Question[] | null>) => void;
+  setCorrQuest: (corr_questions: Partial<SolvedQuestion>[] | null) => void;
   setCurrQuestByIndex: (index: number) => void;
 }
 
