@@ -4,18 +4,24 @@ import React from 'react';
 import styled from 'styled-components';
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+
 
 export default function GamePageLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+
   return (
     <div className="h-screen w-full p-6">
       <div className="fixed top-20 right-20">
       <StyledWrapper>
-      <Button className="comic-button bg-transparent hover:bg-gray-100 active:bg-gray-200 shadow-md hover:shadow-lg active:shadow-sm transition-shadow p-2 rounded-md">
-      <Image draggable="false"className='-mt-4' src="/menu_white.png" alt="Menu" width={30} height={30} />
+      <Button
+      onClick={() => router.push("/mainpage")}
+      className="comic-button bg-transparent hover:bg-gray-100 active:bg-gray-200 shadow-md hover:shadow-lg active:shadow-sm transition-shadow p-2 rounded-md">
+      <Image draggable="false"className='-mt-4' src="/menu_brown.png" alt="Menu" width={30} height={30} />
         </Button>
         </StyledWrapper>
       </div>
@@ -33,23 +39,23 @@ const StyledWrapper = styled.div`
     text-align: center;
     text-decoration: none;
     color: #fff;
-    background-color: transparent;
-    border: 2px solid #ffffff;
+    background-color: #ee7a00;
+    border: 2px solid #19181d;
     border-radius: 10px;
-    box-shadow: 5px 5px 0px #ffffff;
+    box-shadow: 5px 5px 0px #1e181a;
     transition: all 0.3s ease;
     cursor: pointer;
   }
 
   .comic-button:hover {
-    background-color: #ffffff;
+    background-color: #aa5b06;
     color: #ffffff;
-    border: 2px solid #ffffff;
-    box-shadow: 5px 5px 0px #ffffff;
+    border: 2px solid #16151a;
+    box-shadow: 5px 5px 0px #121212;
   }
 
   .comic-button:active {
-    background-color: #ffffff;
+    background-color: #aa5b06;
     box-shadow: none;
-    transform: translateY(4px);
+    transform: translateY(4px) translateX(4px);
   }`;
