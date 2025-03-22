@@ -1,5 +1,5 @@
-import {  UUID } from "@/lib/types";
-import React, {  useState } from "react";
+import { UUID } from "@/lib/types";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Input } from "./ui/input";
 import { useAuthStore } from "@/lib/store/authStore";
@@ -12,44 +12,50 @@ const QuestionCard = () => {
   const { team } = useAuthStore();
   const { curr_quest, updateQuestionByIndex, setCurrAnswer } = useQuestionStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  
-  const handleSubmit = async () => {
+
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
     if (!curr_quest || curr_quest.id === undefined) {
       console.log('No current question available');
       return;
     }
   
     if (!curr_quest.correct_answer) {
-      console.log('No correct answer available');
+      console.log("No correct answer available");
       return;
     }
   
     setIsSubmitting(true);
 
     try {
-      const isCorrect = verifyAnswer(curr_quest?.user_answer, curr_quest?.correct_answer);
+      const isCorrect = verifyAnswer(
+        curr_quest?.user_answer,
+        curr_quest?.correct_answer
+      );
       const currQuest = {
         team_id: team?.id,
         question_id: curr_quest.id,
         submitted_answer: curr_quest.user_answer,
         is_correct: isCorrect,
       };
-      console.log('currQuest: ', currQuest);
-      const newSubmission = await createSubmission(team?.id as UUID, curr_quest?.id, curr_quest?.user_answer as string, isCorrect,team?.team_name as string);
-      console.log('newSubmission: ', newSubmission);
-      // if (newSubmission[0]?.is_correct) {
-      //   updateQuestionByIndex(curr_quest.id - 1, {
-      //     ...curr_quest,
-      //     is_solved: true
-      //   })
-      // }
+      console.log("currQuest: ", currQuest);
+      const newSubmission = await createSubmission(
+        team?.id as UUID,
+        curr_quest?.id,
+        curr_quest?.user_answer as string,
+        isCorrect,
+        team?.team_name as string
+      );
+      console.log("newSubmission: ", newSubmission);
     } catch (error) {
       console.error(error);
     } finally {
       setIsSubmitting(false);
+      setCurrAnswer("");
     }
-  }
-  
+  };
+
   return (
     <div className="p-6">
       <h1 className="flex justify-center press-start-2p-regular text-5xl font-bold my-10 mb-20">
@@ -79,44 +85,40 @@ const QuestionCard = () => {
             </video>
           )}
         </div>
-        <Input 
+        <Input
           value={curr_quest?.user_answer}
           width="30%"
-          onChange={(e) => { 
+          onChange={(e) => {
             // console.log('currQuest: ', curr_quest);
-            setCurrAnswer(e.target.value) 
+            setCurrAnswer(e.target.value);
           }}
           className="max-w-[20rem] py-6"
           placeholder="Type your answer here..."
         />
         <Button
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className="group relative inline-flex font-semibold h-12 items-center w-max mt-6 justify-center overflow-hidden rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[3px_3px_8px_rgba(255,149,68,0.4)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
-          >
-            {isSubmitting ? (
-              <span>Submitting...</span>
-            ) : (
-              <span>Submit</span>
-            )}
-            <div className="ml-1 transition group-hover:translate-x-2">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 15 15"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-              >
-                <path
-                  d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z"
-                  fill="currentColor"
-                  // fill-rule="evenodd"
-                  // clip-rule="evenodd"
-                ></path>
-              </svg>
-            </div>
-          </Button>
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="group relative inline-flex font-semibold h-12 items-center w-max mt-6 justify-center overflow-hidden rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[3px_3px_8px_rgba(255,149,68,0.4)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
+        >
+          {isSubmitting ? <span>Submitting...</span> : <span>Submit</span>}
+          <div className="ml-1 transition group-hover:translate-x-2">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 15 15"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+            >
+              <path
+                d="M8.14645 3.14645C8.34171 2.95118 8.65829 2.95118 8.85355 3.14645L12.8536 7.14645C13.0488 7.34171 13.0488 7.65829 12.8536 7.85355L8.85355 11.8536C8.65829 12.0488 8.34171 12.0488 8.14645 11.8536C7.95118 11.6583 7.95118 11.3417 8.14645 11.1464L11.2929 8H2.5C2.22386 8 2 7.77614 2 7.5C2 7.22386 2.22386 7 2.5 7H11.2929L8.14645 3.85355C7.95118 3.65829 7.95118 3.34171 8.14645 3.14645Z"
+                fill="currentColor"
+                // fill-rule="evenodd"
+                // clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+        </Button>
       </div>
     </div>
   );
