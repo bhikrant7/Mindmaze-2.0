@@ -13,7 +13,7 @@ import SignOutButton from "@/components/SignOutButton";
 export default function Page() {
   const router = useRouter();
   const [completed, setCompleted] = useState<boolean[]>(Array(15).fill(false));
-  const { activeSessions } = useAuthStore();
+  const { user } = useAuthStore();
   const { questions, setQuestions } = useQuestionStore();
 
   // const toggleCompletion = (index: number) => {
@@ -26,7 +26,7 @@ export default function Page() {
   // };
 
   useEffect(() => {
-    if (activeSessions && activeSessions < 1) {
+    if (!user) {
       // <StyledWrapper>
       //   <div className="loadingspinner">
       //     <div id="square1" />
@@ -38,7 +38,7 @@ export default function Page() {
       // </StyledWrapper>;
       router.replace("/login");
     }
-  }, [activeSessions, router]);
+  }, [user, router]);
   return (
     <main className="min-h-screen flex flex-col">
       {/* Main Content Area */}
