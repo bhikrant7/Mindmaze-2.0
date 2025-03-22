@@ -1,13 +1,5 @@
 "use client";
-// all components are Server Components by default
-// Server Components can't use client-side features like:
-// useState
-// useEffect
-// onClick handlers
-// Browser APIs
-// etc.
 
-// to use client-side features, we need to use the "use client" directive
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +20,7 @@ export default function LoginPage() {
   const { loading, user, setTeam, setSession } = useAuthStore();
   const router = useRouter();
 
-  // Handle login
+  // handle login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log(
@@ -38,7 +30,7 @@ export default function LoginPage() {
       teamForm.password
     );
 
-    // Check if the email exists in the teams table
+    // check if the email exists in the teams table
     const { data: existingTeam } = await supabase
       .from("teams")
       .select("*")
@@ -72,7 +64,7 @@ export default function LoginPage() {
       }
       console.log("Existing team found. Signing in...");
 
-      // Check active sessions for this team
+      // active sessions for this team
       const { data: activeSessions } = await supabase
         .from("sessions")
         .select("*")
@@ -132,7 +124,7 @@ export default function LoginPage() {
       //   return;
       // }
 
-      // Sign in using Supabase Auth
+      // sign in using Supabase Auth
       const { error } = await supabase.auth.signInWithPassword({
         email: teamForm.email,
         password: teamForm.password,
@@ -143,7 +135,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Fetch the new session
+      // fetch the new session
       const { data: newSession, error: sessionError } =
         await supabase.auth.getSession();
       if (sessionError) {
@@ -151,7 +143,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Insert new session into `sessions` table
+      // new session into `sessions` table
       const { error: sessionInsertError } = await supabase
         .from("sessions")
         .insert([
@@ -192,18 +184,35 @@ export default function LoginPage() {
       //   return;
       // }
 
-      // Fetch the updated team data
+      // updated team fetch
       const { data: updatedTeam } = await supabase
         .from("teams")
         .select("*")
         .eq("email", teamForm.email)
         .single();
 
-      // Update Zustand store
+      // now update zustand
       setSession(newSession.session); // Store the session in Zustand
       setTeam(updatedTeam || existingTeam);
     } else {
       console.log("No team found. Signing up...");
+
+      // total teams chekc
+      const { count, error: countError } = await supabase
+        .from("teams")
+        .select("*", { count: "exact", head: true });
+
+      if (countError) {
+        console.error("Error fetching team count:", countError.message);
+        return;
+      }
+
+      // no sign-in if team count exceeds 5
+      if (count !== null && count >= 5) {
+        toast.error("Maximum team limit reached. No more sign-ins allowed.");
+        return;
+      }
+
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: teamForm.email,
         password: teamForm.password,
@@ -220,7 +229,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Insert new team into the teams table
+      // new team into teams
       const { data: newTeam, error: insertError } = await supabase
         .from("teams")
         .insert([
@@ -251,7 +260,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Insert new session into `sessions` table
+      // insert new session into `sessions` table
       const { error: sessionInsertError } = await supabase
         .from("sessions")
         .insert([
@@ -267,16 +276,16 @@ export default function LoginPage() {
         return;
       }
 
-      // Update Zustand store
+      // update Zustand store
       setSession(authData.session); // Store session in Zustand
       setTeam(newTeam);
     }
 
-    // Navigate to main page after successful authentication
+    // navigate to main page after successful authentication
     router.push("/mainpage");
   };
 
-  // Handle form input changes
+  // handle form input changes
   const handleChange = (newValues: Partial<Team>) => {
     setTeamForm((prevVal) => ({
       ...prevVal,
@@ -284,7 +293,7 @@ export default function LoginPage() {
     }));
   };
 
-  //Redirect to main page if user is authenticated
+  //redirect to main page if user is authenticated
   useEffect(() => {
     if (user && !loading) {
       router.push("/mainpage");

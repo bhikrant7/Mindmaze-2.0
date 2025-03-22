@@ -109,8 +109,7 @@ export default function LeaderBoardPage({
                   {data.rank}
                 </TableCell>
                 <TableCell className="text-[#00FFFF] text-center">
-                  {data.team_name || "Unknown Team"}{" "}
-                  {/* Match team_name */}
+                  {data.team_name || "Unknown Team"} {/* Match team_name */}
                 </TableCell>
                 <TableCell className="text-[#7FFF00] text-right">
                   {data.total_score}
