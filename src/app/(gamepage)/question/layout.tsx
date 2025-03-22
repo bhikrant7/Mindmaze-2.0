@@ -15,7 +15,7 @@ export default function GamePageLayout({
       <div className="fixed top-20 right-20">
       <StyledWrapper>
       <Button className="comic-button bg-transparent hover:bg-gray-100 active:bg-gray-200 shadow-md hover:shadow-lg active:shadow-sm transition-shadow p-2 rounded-md">
-      <Image draggable="false"className='-mt-6' src="/menu.png" alt="Menu" width={50} height={50} />
+      <Image draggable="false"className='-mt-4' src="/menu_white.png" alt="Menu" width={30} height={30} />
         </Button>
         </StyledWrapper>
       </div>
@@ -24,11 +24,10 @@ export default function GamePageLayout({
   );
 }
 
-
 const StyledWrapper = styled.div`
   .comic-button {
     display: inline-block;
-    padding: 35px 12px;
+    padding: 25px 12px;
     font-size: 24px;
     font-weight: bold;
     text-align: center;
