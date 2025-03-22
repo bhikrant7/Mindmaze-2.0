@@ -14,7 +14,7 @@ export default function SignOutButton() {
         position: "top-center",
         style: {
           background: "rgba(19, 12, 28, 0.15)",
-          border: "1px solid #422d28",
+          border: "1px solid #00AB66",
           color: "#00AB66",
           padding: "12px 16px",
           borderRadius: "8px",

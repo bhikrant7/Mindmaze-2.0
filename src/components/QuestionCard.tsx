@@ -91,8 +91,8 @@ const QuestionCard = () => {
         <Button
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className="group relative inline-flex h-12 items-center w-1/5 justify-center overflow-hidden px-10px rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[5px_5px_5px_rgba(255,149,68,0.4)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
-        >
+          className="group relative inline-flex h-12 items-center w-auto min-w-[150px] max-w-[150px] justify-center overflow-hidden rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[5px_5px_5px_rgba(255,149,68,0.4)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
+          >
           {isSubmitting ? <span>Submitting...</span> : <span>Submit</span>}
           <div className="ml-1 transition group-hover:translate-x-2">
             <svg

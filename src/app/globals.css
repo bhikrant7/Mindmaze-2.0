@@ -4,6 +4,8 @@
 
 @plugin "tailwindcss-animate";
 
+@tailwind utilities;
+
 @custom-variant dark (&:is(.dark *));
 
 
@@ -137,7 +139,6 @@
   }
 }
 
-@tailwind utilities;
 
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
