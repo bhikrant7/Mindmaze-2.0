@@ -38,12 +38,12 @@ const QuestionCard = () => {
   }
   
   return (
-    <div className="p-6">
-      <h1 className="flex justify-center press-start-2p-regular text-5xl font-bold my-10 mb-20">
+    <div className="p-6 flex flex-col items-center min-h-screen w-full">
+      <h1 className="flex justify-center press-start-2p-regular text-5xl font-bold my-10">
         Puzzle {curr_quest?.id}
       </h1>
 
-      <div className="flex flex-col justify-center items-center gap-2.5 aspect-auto shadow-lg w-full border-2 border-orange-400 rounded-lg p-4">
+      <div className="flex flex-col justify-center items-center w-2/3 p-10 mt-20 space-y-4 sm:space-y-6 bg-gray/10 rounded-2xl border border-orange-400">
         <p className="text-2xl">{curr_quest?.question_text}</p>
 
         <div className="flex flex-row flex-wrap lg:flex-nowrap md:overflow-hidden gap-4">
@@ -73,13 +73,13 @@ const QuestionCard = () => {
             // console.log('currQuest: ', curr_quest);
             setCurrAnswer(e.target.value) 
           }}
-          className="max-w-[20rem] py-6"
+          className="max-w-[20rem] py-6 ring-offset-[#FF9544] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544]"
           placeholder="Type your answer here..."
         />
         <Button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className="group relative inline-flex font-semibold h-12 items-center w-max mt-6 justify-center overflow-hidden rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[3px_3px_8px_rgba(255,149,68,0.4)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
+            className="group relative inline-flex h-12 items-center w-1/5 justify-center overflow-hidden px-10px rounded-md bg-gradient-to-r from-[#fa8100] to-[#b05800] px-6 font-medium text-white transition-all duration-150 shadow-[5px_5px_5px_rgba(255,149,68,0.4)] active:translate-x-[3px] active:translate-y-[3px] active:[box-shadow:0px_0px_rgb(82_82_82)] active:bg-gradient-to-r active:from-[#fa8100] active:to-[#b05800] hover:bg-gradient-to-r hover:from-[#fa8100] hover:to-[#b05800] active:text-white"
           >
             {isSubmitting ? (
               <span>Submitting...</span>
