@@ -32,7 +32,7 @@ export default function Page() {
     }
   }, [user, router]);
   return (
-    <main className="min-h-screen flex flex-col scrollbar-hide">
+    <main className="min-h-screen flex flex-col">
       {/* Main Content Area */}
       <div className="flex-grow container mx-auto p-4">
         {/* Title */}
@@ -66,7 +66,7 @@ export default function Page() {
       </div>
 
       <footer>
-        <div className="w-full py-6 flex justify-center items-center">
+        <div className="w-full py-10 flex justify-center items-center">
           {<SignOutButton />}
         </div>
       </footer>

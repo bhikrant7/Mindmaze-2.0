@@ -47,6 +47,8 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+
+
 .press-start-2p-regular {
   font-family: "Press Start 2P", system-ui;
   font-weight: 400;
@@ -142,6 +144,6 @@
   scrollbar-width: none; /* Firefox */
 }
 
-.no-scrollbar::-webkit-scrollbar {
+.no-scrollbar, ::-webkit-scrollbar {
   display: none; /* Chrome, Safari and Opera */
 }
