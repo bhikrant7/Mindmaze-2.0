@@ -1,4 +1,13 @@
+"use client"
+
+import useNavigateWithLoader from "@/components/loaderUI/useNavigateWithLoader";
+import { useEffect } from "react";
+
 export default function Home() {
+  const navigate = useNavigateWithLoader();
+  useEffect(() => {
+    navigate("/login");
+  }, []);
   return (
     <main className="min-h-screen flex flex-col">
       {/* Status Bar */}
@@ -9,8 +18,6 @@ export default function Home() {
           MineMaze
         </h1>
       </div>
-
-     
     </main>
   );
 }

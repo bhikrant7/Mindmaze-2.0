@@ -5,6 +5,9 @@ import { use, useEffect, useState } from "react";
 import { useQuestionStore } from "@/lib/store/questionStore";
 import React from "react";
 import styled from "styled-components";
+import useNavigateWithLoader from "@/components/loaderUI/useNavigateWithLoader";
+import { useAuthStore } from "@/lib/store/authStore";
+
 
 export default function QuestionPage({
   params,
@@ -14,8 +17,10 @@ export default function QuestionPage({
   // const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const {user,team} = useAuthStore();  
   const questionpage = use(params).questionpage; // Corrected
   const { questions, curr_quest, setCurrQuestByIndex } = useQuestionStore();
+  const navigate = useNavigateWithLoader();
 
   const setCurrentQuestion = () => {
     try {
@@ -32,9 +37,15 @@ export default function QuestionPage({
     setCurrentQuestion();
   }, [questionpage, questions]);
 
-  useEffect(() => {
-    console.log("questions: ", questions);
-  }, [questions]);
+  // useEffect(() => {
+  //   console.log("questions: ", questions);
+  // }, [questions]);
+  useEffect(()=>{
+    if(!user && !team){
+      navigate("/login");
+    }
+  },[user,team,navigate])
+
 
   if (error) {
     return <div className="text-red-500">{error}</div>;

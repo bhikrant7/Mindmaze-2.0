@@ -1,3 +1,5 @@
+"use client"
+
 import { create } from "zustand";
 import { supabase } from "../supabaseClient";
 import { Session, User } from "@supabase/supabase-js";
