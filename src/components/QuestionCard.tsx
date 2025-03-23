@@ -11,7 +11,7 @@ import { toast } from "react-hot-toast";
 
 const QuestionCard = () => {
   const { team } = useAuthStore();
-  const { curr_quest, setCurrAnswer } = useQuestionStore();
+  const { curr_quest, corr_questions, setCurrAnswer } = useQuestionStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSolved, setIsSolved] = useState<boolean>(false);
 
@@ -88,7 +88,9 @@ const QuestionCard = () => {
           )}
         </div>
 
-        {isSolved ? (
+        {corr_questions?.some(  
+                (q) => q.question_id === curr_quest?.id
+              ) || isSolved ? (
           <p className="text-green-500 text-2xl font-bold">Solved</p>
         ) : (
           <Input
@@ -101,7 +103,14 @@ const QuestionCard = () => {
           />
         )}
 
-        {!isSolved && (
+        {
+          (
+            !(corr_questions?.some(  
+              (q) => q.question_id === curr_quest?.id
+            )) 
+            &&
+            !isSolved
+          ) && (
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting}
