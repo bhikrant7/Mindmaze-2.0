@@ -3,13 +3,24 @@ import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import ClientWrapper from "../components/loaderUI/ClientWrapper";
+// import FetchQuestions from "@/components/FetchQuestions";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col bg-center bg-cover bg-[url('/background.png')]">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <ClientWrapper>
+            {/* <FetchQuestions /> */}
             <main className="flex-1 overflow-y-auto">{children}</main>
           </ClientWrapper>
         </ThemeProvider>
@@ -18,3 +29,4 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+// 

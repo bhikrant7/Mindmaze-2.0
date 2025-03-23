@@ -1,6 +1,9 @@
+import bcrypt from "bcryptjs";
 import { supabase } from "../supabaseClient";
 import { Question, SolvedQuestion, UUID } from "@/lib/types";
+import { useQuestionStore } from "../store/questionStore";
 
+let count = 0;
 //getQuestion
 export async function getQuestion(id: number): Promise<Question | null> {
   try {
@@ -48,19 +51,21 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
   }
 }
 
-export async function getSolvedQuestions(team_id: UUID | undefined): Promise<Partial<SolvedQuestion>[] | null> {
+export async function getSolvedQuestions(
+  team_id: UUID | undefined
+): Promise<Partial<SolvedQuestion>[] | null> {
   try {
-    console.log('getSolvedQuestions');
-    console.log('team_id: ', team_id);
+    console.log("getSolvedQuestions : No of times I am accessing:",++count);
+    console.log("team_id: ", team_id);
     const { data, error } = await supabase
       .from("solved_questions")
       .select("*")
-      .eq('team_id', team_id);
+      .eq("team_id", team_id);
 
     if (error) {
       return null;
     }
-    console.log('data: ', data);
+    console.log("data: ", data);
     return data as Partial<SolvedQuestion>[];
   } catch (error) {
     console.error("Error in getting: ", error);
@@ -99,3 +104,34 @@ export async function createSubmission(
     return null;
   }
 }
+
+export const fetchAllQuestions = async () => {
+  try {
+    const { questions, setQuestions } = useQuestionStore.getState();
+
+    //  Avoid re-fetching if questions are already stored
+    if (questions && questions.length > 0) {
+      console.log("Using cached questions from Zustand");
+      return;
+    }
+
+    console.log("Fetching questions from API...");
+    const fetchedQuestions = await getAllQuestion();
+
+    const questionsList: Partial<Question>[] =
+      fetchedQuestions?.map((question) => {
+        const hashedAnswer = question?.correct_answer
+          ? bcrypt.hashSync(question.correct_answer.trim().toLowerCase(), 10) // Salt rounds = 10
+          : undefined;
+        return {
+          ...question,
+          correct_answer: hashedAnswer,
+        };
+      }) || [];
+
+    console.log("questionsList: ", questionsList);
+    setQuestions(questionsList); //  Store in Zustand (Persists in localStorage)
+  } catch (error) {
+    console.error("Error fetching questions:", error);
+  }
+};
