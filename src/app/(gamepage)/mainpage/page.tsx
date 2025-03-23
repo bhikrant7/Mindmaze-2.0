@@ -56,7 +56,7 @@ export default function Page() {
             <button
               key={index}
               onClick={() => navigate(`/question/${index + 1}`)}
-              className="relative px-3 py-4 sm:px-4 sm:py-6 rounded-md text-white text-lg sm:text-2xl font-semibold shadow-md transition hover:scale-105 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600"
+              className="cursor-pointer relative px-3 py-4 sm:px-4 sm:py-6 rounded-md text-white text-lg sm:text-2xl font-semibold shadow-md transition hover:scale-105 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600"
             >
               Puzzle {index + 1}
               {corr_questions?.some(
