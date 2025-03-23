@@ -112,7 +112,7 @@ const QuestionCard = () => {
       </h1>
 
       <div className="min-w-fit w-2/3 flex flex-col justify-center text-center items-center p-10 mt-20 space-y-4 sm:space-y-6 bg-gray/10 rounded-2xl border border-orange-400">
-        <p className="chakra-petch-bold text-2xl">
+        <p className="font-bold text-2xl">
           {curr_quest?.question_text}
         </p>
 
@@ -139,7 +139,7 @@ const QuestionCard = () => {
 
         {corr_questions?.some((q) => q.question_id === curr_quest?.id) ||
         isSolved ? (
-          <p className="text-green-500 text-2xl font-bold">Solved</p>
+          <p className="text-green-500 text-4xl font-bold">Solved</p>
         ) : (
           <Input
             value={curr_quest?.user_answer || ""}

@@ -135,6 +135,10 @@
   body {
     @apply bg-background text-foreground;
   }
+  html {
+    font-family: var(--font-orbitron), sans-serif;
+    letter-spacing: 3px;
+  }
 }
 
 
