@@ -11,7 +11,7 @@ import { toast } from "react-hot-toast";
 
 const QuestionCard = () => {
   const { team } = useAuthStore();
-  const { curr_quest, corr_questions, setCurrAnswer } = useQuestionStore();
+  const { curr_quest, corr_questions, setCurrAnswer, setCorrQuest } = useQuestionStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isSolved, setIsSolved] = useState<boolean>(false);
 
@@ -50,6 +50,18 @@ const QuestionCard = () => {
         team?.team_name as string
       );
       console.log("newSubmission: ", newSubmission);
+      if (newSubmission) {
+        setCorrQuest([
+          ...(corr_questions ?? []),
+          {
+            id: curr_quest?.id,
+            team_id: team?.id,
+            question_id: curr_quest?.id,
+            team_name: team?.team_name
+          }
+        ])
+      }
+
     } catch (error) {
       console.error(error);
     } finally {
