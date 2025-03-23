@@ -50,7 +50,7 @@ const QuestionCard = () => {
         team?.team_name as string
       );
       console.log("newSubmission: ", newSubmission);
-      if (newSubmission) {
+      if (newSubmission && isCorrect) {
         setCorrQuest([
           ...(corr_questions ?? []),
           {
