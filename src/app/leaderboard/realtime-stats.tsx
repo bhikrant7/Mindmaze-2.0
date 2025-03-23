@@ -88,9 +88,9 @@ export default function LeaderBoardPage({
       </h1>
       <div className="w-full max-w-2xl p-10 my-10 space-y-4 bg-gray/10 rounded-2xl shadow-lg shadow-black/90 backdrop-blur-[5.1px] border">
         <Table>
-          <TableCaption className="text-sm italic">
+          {/* <TableCaption className="text-sm italic">
             {stats.length} participating teams
-          </TableCaption>
+          </TableCaption> */}
           <TableHeader>
             <TableRow className="uppercase text-lg font-extrabold">
               <TableHead className="w-[120px] text-[#FFA500] text-center">

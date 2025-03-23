@@ -35,7 +35,7 @@ const QuestionCard = () => {
         curr_quest?.user_answer,
         curr_quest?.correct_answer
       );
-
+      
       if (!isCorrect) {
         toast.error("Wrong Answer! Try again.", {
           duration: 10000,
