@@ -49,8 +49,6 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-
-
 .press-start-2p-regular {
   font-family: "Press Start 2P", system-ui;
   font-weight: 400;
