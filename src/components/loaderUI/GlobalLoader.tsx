@@ -1,6 +1,6 @@
 "use client";
 
-import useLoadingStore from "../lib/store/loadingStore";
+import useLoadingStore from "../../lib/store/loadingStore";
 import { StyledWrapper } from "./StyledWrapper";
 
 const GlobalLoader = () => {

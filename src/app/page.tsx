@@ -6,7 +6,7 @@ export default function Home() {
       <div className="flex-grow container mx-auto p-4">
         {/* Your main content goes here */}
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-          Minepage
+          MineMaze
         </h1>
       </div>
 

@@ -1,6 +1,5 @@
 "use client";
 
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,8 +10,11 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import toast from "react-hot-toast";
 import useLoadingStore from "@/lib/store/loadingStore";
+import useNavigateWithLoader from "@/components/loaderUI/useNavigateWithLoader";
 
 export default function LoginPage() {
+  const navigate = useNavigateWithLoader();
+
   const [teamForm, setTeamForm] = useState<Team>({
     team_name: "",
     email: "",
@@ -285,12 +287,11 @@ export default function LoginPage() {
     // navigate to main page after successful authentication
     useLoadingStore.getState().setGlobalLoading(true);
     router.push("/mainpage");
-    setTimeout(() => {
-                 
-      // window.location.reload();
-      useLoadingStore.getState().setGlobalLoading(false);
-    }, 1000); 
-    
+    // setTimeout(() => {
+
+    //   // window.location.reload();
+    //   useLoadingStore.getState().setGlobalLoading(false);
+    // }, 1000);
   };
 
   // handle form input changes
@@ -304,15 +305,15 @@ export default function LoginPage() {
   //redirect to main page if user is authenticated
   useEffect(() => {
     if (user && !loading) {
-      useLoadingStore.getState().setGlobalLoading(true);
-      router.push("/mainpage");
-      setTimeout(() => {
-                 
-        // window.location.reload();
-        useLoadingStore.getState().setGlobalLoading(false);
-      }, 500);
+      // useLoadingStore.getState().setGlobalLoading(true);
+      // router.push("/mainpage");
+      // setTimeout(() => {
+      //   // window.location.reload();
+      //   useLoadingStore.getState().setGlobalLoading(false);
+      // }, 500);
+      navigate("/mainpage");
     }
-  }, [user, loading, router]);
+  }, [user, loading, navigate]);
 
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-cover bg-center bg-no-repeat">

@@ -4,15 +4,16 @@ import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import useLoadingStore from "@/lib/store/loadingStore";
+// import { useRouter } from "next/navigation";
+// import useLoadingStore from "@/lib/store/loadingStore";
+import useNavigateWithLoader from "@/components/loaderUI/useNavigateWithLoader";
 
 export default function GamePageLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
+  const navigate = useNavigateWithLoader();
   // const [isLoading, setIsLoading] = useState(false);
 
   // const navigateAndRefresh = () => {
@@ -32,13 +33,14 @@ export default function GamePageLayout({
         <StyledWrapper>
           <Button
             onClick={() => {
-              useLoadingStore.getState().setGlobalLoading(true); //trigger load
-              router.push("/mainpage");
-              setTimeout(() => {
-                 
-                // window.location.reload();
-                useLoadingStore.getState().setGlobalLoading(false);
-              }, 1000); 
+              // useLoadingStore.getState().setGlobalLoading(true); //trigger load
+              // router.push("/mainpage");
+              // setTimeout(() => {
+
+              //   // window.location.reload();
+              //   useLoadingStore.getState().setGlobalLoading(false);
+              // }, 1000);
+              navigate("/mainpage");
             }}
             className="comic-button bg-transparent hover:bg-gray-100 active:bg-gray-200 shadow-md hover:shadow-lg active:shadow-sm transition-shadow p-2 rounded-md"
           >

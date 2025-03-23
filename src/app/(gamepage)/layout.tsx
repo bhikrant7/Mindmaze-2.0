@@ -16,7 +16,7 @@ export default function GamePageLayout({
 }) {
   // const {loading} = useAuthStore();
   const { team } = useAuthStore();
-  const { questions, setQuestions, setCorrQuest } = useQuestionStore();
+  const { setQuestions, setCorrQuest } = useQuestionStore();
 
   const fetchAllQuestions = async () => {
     try {
