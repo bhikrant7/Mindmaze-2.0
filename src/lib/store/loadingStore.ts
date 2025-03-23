@@ -1,4 +1,5 @@
-import { create } from 'zustand';
+// lib/store/loadingStore.ts
+import { create } from "zustand";
 
 type LoadingState = {
   isGlobalLoading: boolean;

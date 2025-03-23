@@ -1,19 +1,21 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+// import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
 import { useQuestionStore } from "@/lib/store/questionStore";
 import Image from "next/image";
 
 // import { StyledWrapper } from "@/components/StyledWrapper";
 import SignOutButton from "@/components/SignOutButton";
-import useLoadingStore from "@/lib/store/loadingStore";
+import useNavigateWithLoader from "@/components/loaderUI/useNavigateWithLoader";
+// import useLoadingStore from "@/lib/store/loadingStore";
 
 export default function Page() {
-  const router = useRouter();
-  const [completed, setCompleted] = useState<boolean[]>(Array(15).fill(false));
+  // const router = useRouter();
+  const navigate = useNavigateWithLoader();
+  // const [completed, setCompleted] = useState<boolean[]>(Array(15).fill(false));
   const { user } = useAuthStore();
-  const { questions, corr_questions, setQuestions } = useQuestionStore();
+  const { questions, corr_questions } = useQuestionStore();
 
   // const toggleCompletion = (index: number) => {
   //   router.push(`/question/${index + 1}`);
@@ -28,14 +30,14 @@ export default function Page() {
 
   useEffect(() => {
     if (!user) {
-      useLoadingStore.getState().setGlobalLoading(true); // ✅ Show spinner
-      router.push("/login");
+      // useLoadingStore.getState().setGlobalLoading(true); // ✅ Show spinner
+      navigate("/login");
 
-      setTimeout(() => {
-        useLoadingStore.getState().setGlobalLoading(false); // ✅ Hide spinner after redirect
-      }, 1000); // Delay for smooth transition
+      // setTimeout(() => {
+      //   useLoadingStore.getState().setGlobalLoading(false); // ✅ Hide spinner after redirect
+      // }, 1000); // Delay for smooth transition
     }
-  }, [user, router]);
+  }, [user, navigate]);
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -53,7 +55,7 @@ export default function Page() {
           {questions?.map((_, index) => (
             <button
               key={index}
-              onClick={() => router.push(`/question/${index + 1}`)}
+              onClick={() => navigate(`/question/${index + 1}`)}
               className="relative px-3 py-4 sm:px-4 sm:py-6 rounded-md text-white text-lg sm:text-2xl font-semibold shadow-md transition hover:scale-105 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600"
             >
               Puzzle {index + 1}

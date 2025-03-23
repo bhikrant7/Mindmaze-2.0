@@ -1,16 +1,18 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import useNavigateWithLoader from "@/components/loaderUI/useNavigateWithLoader";
+// import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function QuestionPage() {
-  const router = useRouter();
+  const navigate = useNavigateWithLoader()
 
   useEffect(() => {
     // Different navigation methods in Next.js:
 
     // 1. push - adds to history stack (can go back)
-    router.push("/question/1");
+    // router.push("/question/1");
+    navigate("/question/1")
 
     // 2. replace - replaces current history entry (can't go back)
     // router.replace("/question/1");
@@ -26,7 +28,7 @@ export default function QuestionPage() {
 
     // 6. prefetch - prefetch a route (optimization)
     // router.prefetch("/question/1");
-  }, [router]);
+  }, [navigate]);
 
   return (
     <div className="flex items-center justify-center h-full">
