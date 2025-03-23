@@ -1,55 +1,34 @@
 "use client";
 
-// import { useAuthStore } from "@/lib/store/authStore";
-// import { StyledWrapper } from "@/components/StyledWrapper";
-import { getAllQuestion, getSolvedQuestions } from "@/lib/apiCalls/api";
-import { Question, UUID } from "@/lib/types";
-import bcrypt from "bcryptjs";
-import { useQuestionStore } from "@/lib/store/questionStore";
+import { getSolvedQuestions } from "@/lib/apiCalls/api";
+import { UUID } from "@/lib/types";
 import { useEffect } from "react";
 import { useAuthStore } from "@/lib/store/authStore";
+import { useQuestionStore } from "@/lib/store/questionStore";
+import FetchQuestions from "@/components/FetchQuestions";
 
 export default function GamePageLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // const {loading} = useAuthStore();
   const { team } = useAuthStore();
-  const { setQuestions, setCorrQuest } = useQuestionStore();
-
-  const fetchAllQuestions = async () => {
-    try {
-      const questions = await getAllQuestion();
-      const questionsList: Partial<Question>[] =
-        questions?.map((question) => {
-          const hashedAnswer = question?.correct_answer
-            ? bcrypt.hashSync(question.correct_answer.trim().toLowerCase(), 10) // Salt rounds = 10
-            : undefined;
-          return {
-            ...question,
-            correct_answer: hashedAnswer,
-          };
-        }) || [];
-      console.log("questionsList: ", questionsList);
-      setQuestions(questionsList);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { corr_questions, setCorrQuest } = useQuestionStore();
 
   const fetchSolvedQuestions = async () => {
     try {
+      if (corr_questions && corr_questions.length > 0) {
+        console.log("Using cached solved questions from Zustand");
+        return; // ✅ Avoid unnecessary API call
+      }
+
+      console.log("Fetching solved questions from API...");
       const solvedQuestions = await getSolvedQuestions(team?.id as UUID);
       setCorrQuest(solvedQuestions);
     } catch (error) {
       console.error(error);
     }
-  }
-
-  useEffect(() => {
-    fetchAllQuestions();
-  }, []);
+  };
 
   useEffect(() => {
     if (team?.id) {
@@ -57,5 +36,10 @@ export default function GamePageLayout({
     }
   }, [team]);
 
-  return <div className="h-screen w-full p-6">{children}</div>;
+  return (
+    <div className="h-screen w-full p-6">
+      <FetchQuestions /> {/* ✅ Fetches all questions */}
+      {children}
+    </div>
+  );
 }
