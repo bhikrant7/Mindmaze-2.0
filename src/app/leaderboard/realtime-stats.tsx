@@ -54,18 +54,25 @@ export default function LeaderBoardPage({
         },
         (payload) => {
           // update if insert in lead
-          if (payload.eventType === "INSERT") {
-            setStats((prevStats) => [...prevStats, payload.new as Leaderboard]);
-          } else if (payload.eventType === "UPDATE") {
-            //agor id milai update
-            setStats((prevStats) =>
-              prevStats.map((item) =>
+          setStats((prevStats) => {
+            let updatedStats;
+  
+            if (payload.eventType === "INSERT") {
+              updatedStats = [...prevStats, payload.new as Leaderboard];
+            } else if (payload.eventType === "UPDATE") {
+              updatedStats = prevStats.map((item) =>
                 item.team_id === payload.new.team_id
                   ? { ...item, ...payload.new }
                   : item
-              )
-            );
-          }
+              );
+            } else {
+              updatedStats = prevStats;
+            }
+  
+            // Ensure the leaderboard is always sorted by rank
+            return updatedStats.sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity));
+          });
+  
         }
       )
       .subscribe();
