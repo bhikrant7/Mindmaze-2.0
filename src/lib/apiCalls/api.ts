@@ -98,7 +98,6 @@ export async function createSubmission(
       return null;
     }
     return submission;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     console.error("Error in submission :", error);
     return null;

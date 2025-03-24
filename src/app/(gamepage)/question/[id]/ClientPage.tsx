@@ -9,11 +9,11 @@ import styled from "styled-components";
 import useNavigateWithLoader from "@/components/loaderUI/useNavigateWithLoader";
 import { useAuthStore } from "@/lib/store/authStore";
 
-export default function QuestionPage({
-  params: { id },
-}: {
-  params: { id: string };
-}) {
+type Props = {
+  id: string;
+};
+
+export default function QuestionPage({ id }: Props) {
   // const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
