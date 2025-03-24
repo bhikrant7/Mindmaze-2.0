@@ -7,7 +7,7 @@ export default function Home() {
   const navigate = useNavigateWithLoader();
   useEffect(() => {
     navigate("/login");
-  }, []);
+  }, [navigate]);
   return (
     <main className="min-h-screen flex flex-col">
       {/* Status Bar */}

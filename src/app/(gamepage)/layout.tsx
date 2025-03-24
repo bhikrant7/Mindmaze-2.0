@@ -15,30 +15,29 @@ export default function GamePageLayout({
   const { team } = useAuthStore();
   const { corr_questions, setCorrQuest } = useQuestionStore();
 
-  const fetchSolvedQuestions = async () => {
-    try {
-      if (corr_questions && corr_questions.length > 0) {
-        console.log("Using cached solved questions from Zustand");
-        return; // ✅ Avoid unnecessary API call
-      }
-
-      console.log("Fetching solved questions from API...");
-      const solvedQuestions = await getSolvedQuestions(team?.id as UUID);
-      setCorrQuest(solvedQuestions);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
     if (team?.id) {
+      const fetchSolvedQuestions = async () => {
+        try {
+          if (corr_questions && corr_questions.length > 0) {
+            console.log("Using cached solved questions from Zustand");
+            return; // Avoid unnecessary API call
+          }
+
+          console.log("Fetching solved questions from API...");
+          const solvedQuestions = await getSolvedQuestions(team?.id as UUID);
+          setCorrQuest(solvedQuestions);
+        } catch (error) {
+          console.error(error);
+        }
+      };
       fetchSolvedQuestions();
     }
-  }, [team]);
+  }, [team, corr_questions, setCorrQuest]);
 
   return (
     <div className="h-screen w-full p-6">
-      <FetchQuestions /> {/* ✅ Fetches all questions */}
+      <FetchQuestions /> {/* Fetches all questions */}
       {children}
     </div>
   );

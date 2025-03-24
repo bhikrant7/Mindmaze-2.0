@@ -23,7 +23,7 @@ export default function ClientWrapper({
     }, 500);
 
     return () => clearTimeout(timeout); // Cleanup timer to prevent memory leaks
-  }, [pathname]);
+  }, [pathname, setGlobalLoading]);
 
   return (
     <>

@@ -3,7 +3,6 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -74,7 +73,7 @@ export default function LeaderBoardPage({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [supabase]);
+  }, []);
   // Create a mapping of team_id to team_name
   // const teamMap = teams.reduce((acc, team) => {
   //   acc[team.id!] = team.team_name; // Ensure id exists before using

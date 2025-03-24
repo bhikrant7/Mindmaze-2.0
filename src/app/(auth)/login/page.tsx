@@ -210,8 +210,8 @@ export default function LoginPage() {
         return;
       }
 
-      // no sign-in if team count exceeds 5
-      if (count !== null && count >= 5) {
+      // no sign-in if team count exceeds 65
+      if (count !== null && count >= 65) {
         toast.error("Maximum team limit reached. No more sign-ins allowed.");
         return;
       }

@@ -1,51 +1,50 @@
 "use client";
 
 import QuestionCard from "@/components/QuestionCard";
-import { use, useEffect, useState } from "react";
+// import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuestionStore } from "@/lib/store/questionStore";
 import React from "react";
 import styled from "styled-components";
 import useNavigateWithLoader from "@/components/loaderUI/useNavigateWithLoader";
 import { useAuthStore } from "@/lib/store/authStore";
 
-
 export default function QuestionPage({
-  params,
+  params: { id },
 }: {
-  params: { questionpage: string };
+  params: { id: string };
 }) {
   // const [question, setQuestion] = useState<Question | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const {user,team} = useAuthStore();  
-  const questionpage = use(params).questionpage; // Corrected
+  const { user, team } = useAuthStore();
+  // const questionpage = use(params).questionpage; // Corrected
+  const questionpage = id; // Corrected
   const { questions, curr_quest, setCurrQuestByIndex } = useQuestionStore();
   const navigate = useNavigateWithLoader();
 
-  const setCurrentQuestion = () => {
-    try {
-      const questionId = parseInt(questionpage, 10);
-      setCurrQuestByIndex(questionId - 1);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setError("Failed to load question");
-    }
-  };
-
   useEffect(() => {
+    const setCurrentQuestion = () => {
+      try {
+        const questionId = parseInt(questionpage, 10);
+        setCurrQuestByIndex(questionId - 1);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+        setError("Failed to load question");
+      }
+    };
     setCurrentQuestion();
-  }, [questionpage, questions]);
+  }, [questionpage, questions, setCurrQuestByIndex]);
 
   // useEffect(() => {
   //   console.log("questions: ", questions);
   // }, [questions]);
-  useEffect(()=>{
-    if(!user && !team){
+  useEffect(() => {
+    if (!user && !team) {
       navigate("/login");
     }
-  },[user,team,navigate])
-
+  }, [user, team, navigate]);
 
   if (error) {
     return <div className="text-red-500">{error}</div>;
