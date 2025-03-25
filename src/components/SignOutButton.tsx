@@ -100,6 +100,7 @@ const StyledWrapper = styled.div`
     transition-duration: 0.3s;
     padding-left: 10px;
     margin-top: 2px;
+    padding-right: 20px; 
   }
   /* hover effect button's text */
   .Btn:hover .text {
