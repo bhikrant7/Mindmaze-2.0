@@ -56,7 +56,7 @@ export default function LeaderBoardPage({
           // update if insert in lead
           setStats((prevStats) => {
             let updatedStats;
-  
+
             if (payload.eventType === "INSERT") {
               updatedStats = [...prevStats, payload.new as Leaderboard];
             } else if (payload.eventType === "UPDATE") {
@@ -68,11 +68,12 @@ export default function LeaderBoardPage({
             } else {
               updatedStats = prevStats;
             }
-  
+
             // Ensure the leaderboard is always sorted by rank
-            return updatedStats.sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity));
+            return updatedStats.sort(
+              (a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity)
+            );
           });
-  
         }
       )
       .subscribe();
@@ -92,32 +93,31 @@ export default function LeaderBoardPage({
       <h1 className="press-start-2p-regular sm:text-5xl md:text-5xl lg:text-7xl font-bold text-white mt-10">
         Leaderboard
       </h1>
-      <div className="w-full max-w-2xl p-10 my-10 space-y-4 bg-gray/10 rounded-2xl shadow-lg shadow-black/90 backdrop-blur-[5.1px] border">
+      <div className="w-full max-w-5xl p-10 my-10 space-y-4 bg-gray/10 rounded-2xl shadow-lg shadow-black/90 backdrop-blur-[5.1px] border">
         <Table>
-          {/* <TableCaption className="text-sm italic">
-            {stats.length} participating teams
-          </TableCaption> */}
           <TableHeader>
-            <TableRow className="uppercase text-lg font-extrabold">
-              <TableHead className="w-[120px] text-[#FFA500] text-center">
+            <TableRow className="uppercase text-4xl font-extrabold">
+              <TableHead className="text-[#FFD700] text-center px-4 py-2">
                 Rank
               </TableHead>
-              <TableHead className="text-center text-[#00FFFF]">Name</TableHead>
-              <TableHead className="text-center text-[#7FFF00]">
-                Score
+              <TableHead className="text-center text-[#00FFFF] px-4 py-2">
+                Team
+              </TableHead>
+              <TableHead className="text-center text-[#7FFF00] py-2">
+                Solved
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {stats.map((data) => (
+            {stats.map((data, index) => (
               <TableRow key={data.team_id}>
-                <TableCell className="font-medium text-[#FFA500] text-center">
-                  {data.rank}
+                <TableCell className="text-lg text-[#FFD700] text-center px-4 py-4">
+                  {index + 1}
                 </TableCell>
-                <TableCell className="text-[#00FFFF] text-center">
-                  {data.team_name || "Unknown Team"} {/* Match team_name */}
+                <TableCell className="text-lg text-[#00FFFF] text-center px-4 py-2">
+                  {data.team_name || "Unknown Team"}
                 </TableCell>
-                <TableCell className="text-[#7FFF00] text-right">
+                <TableCell className="text-lg text-[#7FFF00] text-center px-2 py-2">
                   {data.total_score}
                 </TableCell>
               </TableRow>
