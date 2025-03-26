@@ -21,6 +21,7 @@ export default function LeaderBoardPage({
   const [stats, setStats] = useState<Leaderboard[]>(serverStats);
   const fireworksRef = useRef<HTMLDivElement>(null);
   const [showFireworks, setShowFireworks] = useState(false);
+  const teamsWithFireworks = useRef<Set<number>>(new Set()); // Track teams that triggered fireworks
 
   useEffect(() => {
     const channel = supabase
@@ -62,8 +63,14 @@ export default function LeaderBoardPage({
   }, []);
 
   useEffect(() => {
-    // Check if any team has reached 15 solved problems
-    if (stats.some((team) => team.total_score >= 15)) {
+    // Check if any team has just reached 15 solved problems
+    const teamJustReached15 = stats.find(
+      (team) =>
+        team.total_score >= 15 && !teamsWithFireworks.current.has(team.team_id)
+    );
+
+    if (teamJustReached15) {
+      teamsWithFireworks.current.add(teamJustReached15.team_id);
       setShowFireworks(true);
 
       if (fireworksRef.current) {
@@ -78,13 +85,13 @@ export default function LeaderBoardPage({
         setTimeout(() => {
           fireworks.stop();
           setShowFireworks(false);
-        }, 20000); // Stop fireworks after 5 seconds
+        }, 20000); // Stop fireworks after 20 seconds
       }
     }
   }, [stats]);
 
   return (
-    <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-auto bg-center bg-no-repeat">
+    <div className="relative min-h-screen w-full flex flex-col items-center justify-center p-4 bg-[url('/background.svg')] bg-cover bg-no-repeat">
       <h1 className="press-start-2p-regular sm:text-5xl md:text-5xl lg:text-7xl font-bold text-white mt-10">
         Leaderboard
       </h1>
