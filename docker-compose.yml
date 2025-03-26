@@ -20,8 +20,8 @@ services:
     container_name: duckdns
     restart: always
     environment:
-      - SUBDOMAINS=minzmaze.duckdns.org
-      - TOKEN=4b02543a-bf37-43f3-b705-e896770366bd
+      - SUBDOMAINS=your-subdomain
+      - TOKEN=your-duckdns-token
     networks:
       - app_network
 
