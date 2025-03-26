@@ -12,11 +12,11 @@ export default function GamePageLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { team } = useAuthStore();
+  const { team, user } = useAuthStore();
   const { corr_questions, setCorrQuest } = useQuestionStore();
 
   useEffect(() => {
-    if (team?.id) {
+    if (team && user) {
       const fetchSolvedQuestions = async () => {
         try {
           if (corr_questions && corr_questions.length > 0) {
@@ -33,11 +33,11 @@ export default function GamePageLayout({
       };
       fetchSolvedQuestions();
     }
-  }, [team, corr_questions, setCorrQuest]);
+  }, [team, user, setCorrQuest]);
 
   return (
     <div className="h-screen w-full p-6">
-      <FetchQuestions /> {/* Fetches all questions */}
+      {user && <FetchQuestions />} {/* Fetches all questions */}
       {children}
     </div>
   );

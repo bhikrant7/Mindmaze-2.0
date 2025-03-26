@@ -68,7 +68,7 @@ export default function QuestionPage({ id }: Props) {
     return <div>No question found</div>; // Prevents empty QuestionCard from rendering
   }
 
-  return <QuestionCard />;
+  return user && <QuestionCard />;
 }
 
 const StyledWrapper = styled.div`

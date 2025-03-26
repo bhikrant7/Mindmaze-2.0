@@ -10,7 +10,7 @@ export default function FetchQuestions() {
     if (!isFetchedRef.current) {
       fetchAllQuestions();
       isFetchedRef.current = true; // Prevents multiple API calls
-      console.log("Questions fetched");
+      // console.log("Questions fetched");
     }
   }, []);
 

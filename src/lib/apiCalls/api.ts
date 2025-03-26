@@ -128,7 +128,7 @@ export const fetchAllQuestions = async () => {
         };
       }) || [];
 
-    console.log("questionsList: ", questionsList);
+    // console.log("questionsList: ", questionsList);
     setQuestions(questionsList); //  Store in Zustand (Persists in localStorage)
   } catch (error) {
     console.error("Error fetching questions:", error);
