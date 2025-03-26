@@ -197,7 +197,7 @@ export default function AdminMode() {
       return;
     }
 
-    toast.success("Signed Out successfully", {
+    toast.success("Registered successfully", {
       duration: 10000,
       position: "top-center",
       style: {
