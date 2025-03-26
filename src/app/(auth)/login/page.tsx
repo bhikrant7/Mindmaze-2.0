@@ -198,90 +198,110 @@ export default function LoginPage() {
       setSession(newSession.session); // Store the session in Zustand
       setTeam(updatedTeam || existingTeam);
     } else {
-      console.log("No team found. Signing up...");
-
-      // total teams chekc
-      const { count, error: countError } = await supabase
-        .from("teams")
-        .select("*", { count: "exact", head: true });
-
-      if (countError) {
-        console.error("Error fetching team count:", countError.message);
-        return;
-      }
-
-      // no sign-in if team count exceeds 65
-      if (count !== null && count >= 65) {
-        toast.error("Maximum team limit reached. No more sign-ins allowed.");
-        return;
-      }
-
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: teamForm.email,
-        password: teamForm.password,
-      });
-
-      if (authError) {
-        console.error("Sign up error:", authError.message);
-        return;
-      }
-
-      const user = authData.user;
-      if (!user) {
-        console.error("No user returned after sign-up");
-        return;
-      }
-
-      // new team into teams
-      const { data: newTeam, error: insertError } = await supabase
-        .from("teams")
-        .insert([
-          {
-            team_name: teamForm.team_name,
-            email: teamForm.email,
-            password: teamForm.password,
-            current_question_id: 0,
-            questions_solved: 0,
-            has_submitted: false,
-            refresh_token: authData.session?.refresh_token,
-            // session_count: 1, // Set initial session count
+      console.log("No team found. UnAuthorized");
+      toast.error(
+        "No team name found. Your are unauthorized. If you have registered then please contact Coordinators...",
+        {
+          duration: 10000, // How long the toast stays (in ms)
+          position: "top-center", // Position of the toast
+          style: {
+            background: "rgba(19, 12, 28, 0.15)",
+            border: "1px solid #422d28",
+            color: "#ff4d4d",
+            padding: "12px 16px",
+            borderRadius: "8px",
+            backdropFilter: "blur(8px)",
           },
-        ])
-        .select()
-        .single();
-
-      if (insertError) {
-        console.error("Error inserting team:", insertError.message);
-        return;
-      }
-
-      //get the current session
-      const { data: newSession, error: sessionError } =
-        await supabase.auth.getSession();
-      if (sessionError) {
-        console.error("Error fetching session:", sessionError.message);
-        return;
-      }
-
-      // insert new session into `sessions` table
-      const { error: sessionInsertError } = await supabase
-        .from("sessions")
-        .insert([
-          {
-            team_id: newTeam.id,
-            id: newSession.session?.refresh_token, // Using refresh token for tracking
-            email: teamForm.email,
+          iconTheme: {
+            primary: "#ff4d4d",
+            secondary: "#422d28",
           },
-        ]);
+        }
+      );
+      return;
 
-      if (sessionInsertError) {
-        console.error("Error inserting session:", sessionInsertError.message);
-        return;
-      }
+      //   // total teams chekc
+      //   const { count, error: countError } = await supabase
+      //     .from("teams")
+      //     .select("*", { count: "exact", head: true });
 
-      // update Zustand store
-      setSession(authData.session); // Store session in Zustand
-      setTeam(newTeam);
+      //   if (countError) {
+      //     console.error("Error fetching team count:", countError.message);
+      //     return;
+      //   }
+
+      //   // no sign-in if team count exceeds 65
+      //   if (count !== null && count >= 65) {
+      //     toast.error("Maximum team limit reached. No more sign-ins allowed.");
+      //     return;
+      //   }
+
+      //   const { data: authData, error: authError } = await supabase.auth.signUp({
+      //     email: teamForm.email,
+      //     password: teamForm.password,
+      //   });
+
+      //   if (authError) {
+      //     console.error("Sign up error:", authError.message);
+      //     return;
+      //   }
+
+      //   const user = authData.user;
+      //   if (!user) {
+      //     console.error("No user returned after sign-up");
+      //     return;
+      //   }
+
+      //   // new team into teams
+      // const { data: newTeam, error: insertError } = await supabase
+      //   .from("teams")
+      //   .insert([
+      //     {
+      //       team_name: teamForm.team_name,
+      //       email: teamForm.email,
+      //       password: teamForm.password,
+      //       current_question_id: 0,
+      //       questions_solved: 0,
+      //       has_submitted: false,
+      //       refresh_token: authData.session?.refresh_token,
+      //       // session_count: 1, // Set initial session count
+      //     },
+      //   ])
+      //   .select()
+      //   .single();
+
+      //   if (insertError) {
+      //     console.error("Error inserting team:", insertError.message);
+      //     return;
+      //   }
+
+      //   //get the current session
+      //   const { data: newSession, error: sessionError } =
+      //     await supabase.auth.getSession();
+      //   if (sessionError) {
+      //     console.error("Error fetching session:", sessionError.message);
+      //     return;
+      //   }
+
+      //   // insert new session into `sessions` table
+      //   const { error: sessionInsertError } = await supabase
+      //     .from("sessions")
+      //     .insert([
+      //       {
+      //         team_id: newTeam.id,
+      //         id: newSession.session?.refresh_token, // Using refresh token for tracking
+      //         email: teamForm.email,
+      //       },
+      //     ]);
+
+      //   if (sessionInsertError) {
+      //     console.error("Error inserting session:", sessionInsertError.message);
+      //     return;
+      //   }
+
+      //   // update Zustand store
+      //   setSession(authData.session); // Store session in Zustand
+      //   setTeam(newTeam);
     }
 
     // navigate to main page after successful authentication
