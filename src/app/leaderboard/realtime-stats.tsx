@@ -10,15 +10,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Leaderboard } from "@/lib/types";
 import { supabase } from "@/lib/supabaseClient";
+import { LeaderboardEntry } from "./Leaderboard";
 
 export default function LeaderBoardPage({
   serverStats,
 }: {
-  serverStats: Leaderboard[];
+  serverStats: LeaderboardEntry[];
 }) {
-  const [stats, setStats] = useState<Leaderboard[]>(serverStats);
+  const [stats, setStats] = useState<LeaderboardEntry[]>(serverStats);
   const fireworksRef = useRef<HTMLDivElement>(null);
   const [showFireworks, setShowFireworks] = useState(false);
   const teamsWithFireworks = useRef<Set<number>>(new Set()); // Track teams that triggered fireworks
@@ -38,7 +38,7 @@ export default function LeaderBoardPage({
             let updatedStats;
 
             if (payload.eventType === "INSERT") {
-              updatedStats = [...prevStats, payload.new as Leaderboard];
+              updatedStats = [...prevStats, payload.new as LeaderboardEntry];
             } else if (payload.eventType === "UPDATE") {
               updatedStats = prevStats.map((item) =>
                 item.team_id === payload.new.team_id
@@ -65,8 +65,10 @@ export default function LeaderBoardPage({
   useEffect(() => {
     // Check if any team has just reached 15 solved problems
     const teamJustReached15 = stats.find(
-      (team) =>
-        team.total_score >= 15 && !teamsWithFireworks.current.has(team.team_id)
+      (team) => {
+        const totalScore = typeof team.total_score === "number" ? team.total_score : 0; // Default to 0 if empty
+        return totalScore >= 15 && !teamsWithFireworks.current.has(team.team_id);
+      }
     );
 
     if (teamJustReached15) {
@@ -112,7 +114,8 @@ export default function LeaderBoardPage({
           </TableHeader>
           <TableBody>
             {stats.map((data, index) => {
-              const isChampion = data.total_score >= 15;
+              const totalScore = typeof data.total_score === "number" ? data.total_score : 0;
+              const isChampion = totalScore >= 15;
               return (
                 <TableRow
                   key={data.team_id}
@@ -125,7 +128,7 @@ export default function LeaderBoardPage({
                     {data.team_name || "Unknown Team"}
                   </TableCell>
                   <TableCell className="text-lg text-[#7FFF00] text-center px-2 py-2">
-                    {data.total_score}
+                    {totalScore}
                   </TableCell>
                 </TableRow>
               );
@@ -138,7 +141,10 @@ export default function LeaderBoardPage({
       {showFireworks && <div ref={fireworksRef} className="absolute top-0 left-0 w-full h-full"></div>}
 
       {/* Congratulatory Message */}
-      {stats.some((data) => data.total_score >= 15) && (
+      {stats.some((data) => {
+        const totalScore = typeof data.total_score === "number" ? data.total_score : 0;
+        return totalScore >= 15;
+      }) && (
         <div className="mt-6 text-center text-2xl font-bold text-[#FFD700] animate-bounce">
           🎉 Congratulations! A team has solved all the Problems! 🎉
         </div>
