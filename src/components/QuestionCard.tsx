@@ -8,12 +8,14 @@ import { Button } from "@/components/ui/button";
 import { createSubmission } from "@/lib/apiCalls/api";
 import { verifyAnswer } from "@/lib/helpers/common";
 import { toast } from "react-hot-toast";
+import { GlobalQuestionHint } from "./GlobalQuestionHint";
 
 const QuestionCard = () => {
   const { team } = useAuthStore();
   const { curr_quest, corr_questions, setCurrAnswer, setCorrQuest } =
     useQuestionStore();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
   const [isSolved, setIsSolved] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -45,11 +47,12 @@ const QuestionCard = () => {
           primary: "#ff4d4d",
           secondary: "#422d28",
         },
-      })
-      return
+      });
+      return;
     }
 
     setIsSubmitting(true);
+    setHasSubmitted(true);
 
     try {
       const isCorrect = verifyAnswer(
@@ -85,7 +88,7 @@ const QuestionCard = () => {
         isCorrect,
         team?.team_name as string
       );
-      console.log("newSubmission: ", newSubmission);
+      // console.log("newSubmission: ", newSubmission);
       if (newSubmission && isCorrect) {
         setCorrQuest([
           ...(corr_questions ?? []),
@@ -112,29 +115,47 @@ const QuestionCard = () => {
       </h1>
 
       <div className="min-w-fit w-2/3 flex flex-col justify-center text-center items-center p-10 mt-20 space-y-4 sm:space-y-6 bg-gray/10 rounded-2xl border border-orange-400">
-        <p className="font-bold text-2xl">
-          {curr_quest?.question_text}
-        </p>
+        <p className="font-bold text-2xl">{curr_quest?.question_text}</p>
 
         <div className="flex flex-row flex-wrap lg:flex-nowrap md:overflow-hidden gap-4">
-          {curr_quest?.media_image && (
-            <div className="relative w-[600px] h-[400px]">
+          {curr_quest?.media_image?.map((img, index) => (
+            <div key={index} className="relative w-[600px] h-[400px]">
               <Image
-                src={curr_quest?.media_image}
-                alt="Question media"
+                src={img}
+                alt={`Question media ${index + 1}`}
                 layout="fill"
                 objectFit="contain"
                 className="rounded-lg"
                 priority
               />
             </div>
-          )}
-          {curr_quest?.media_video && (
-            <video controls className="mb-4 rounded-lg max-w-full">
-              <source src={curr_quest?.media_video} type="video/mp4" />
+          ))}
+
+          {curr_quest?.media_video?.map((vid, index) => (
+            <video key={index} controls className="mb-4 rounded-lg max-w-full">
+              <source src={vid} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-          )}
+          ))}
+
+          {curr_quest?.media_audio?.map((audio, index) => (
+            <audio key={index} controls className="mb-4 rounded-lg max-w-full">
+              <source src={audio} type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+          ))}
+
+          {curr_quest?.id === 7 &&
+            !isSolved && // Ensure the question is not solved
+            !corr_questions?.some((q) => q.question_id === curr_quest?.id) && // Ensure it's not correct
+            hasSubmitted && ( // Show only after at least one submission attempt
+              <GlobalQuestionHint
+                questionId={curr_quest?.id}
+                userAnswer={curr_quest?.user_answer}
+              >
+                <Button variant="outline">View Hint</Button>
+              </GlobalQuestionHint>
+            )}
         </div>
 
         {corr_questions?.some((q) => q.question_id === curr_quest?.id) ||

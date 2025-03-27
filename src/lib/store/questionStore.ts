@@ -8,7 +8,10 @@ interface QuestionState {
   corr_questions: Partial<SolvedQuestion>[] | null;
   setCurrQuest: (curr_quest: Partial<Question | null>) => void;
   setCurrAnswer: (curr_answer: string) => void;
-  updateQuestionByIndex: (indexToUpdate: number, updatedQuestionItem: Partial<Question>) => void;
+  updateQuestionByIndex: (
+    indexToUpdate: number,
+    updatedQuestionItem: Partial<Question>
+  ) => void;
   setQuestions: (questions: Partial<Question>[] | null) => void;
   setCorrQuest: (corr_questions: Partial<SolvedQuestion>[] | null) => void;
   setCurrQuestByIndex: (index: number) => void;
@@ -21,8 +24,10 @@ export const useQuestionStore = create<QuestionState>()(
       curr_quest: {
         id: 0,
         question_text: "",
-        media_image: "",
-        media_video: "",
+        media_image: [],
+        media_video: [],
+        media_audio: [],
+        hint: "",
         correct_answer: "",
         user_answer: "",
         is_submitted: false,
@@ -57,7 +62,7 @@ export const useQuestionStore = create<QuestionState>()(
     }),
     {
       name: "question-storage",
-      storage: createJSONStorage(() => localStorage), // ✅ Correct way to persist state
+      storage: createJSONStorage(() => localStorage), // Correct way to persist state
     }
   )
 );

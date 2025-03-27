@@ -5,28 +5,30 @@ export interface Team {
   id?: UUID;
   team_name: string;
   password: string;
-  email:string;
+  email: string;
   refresh_token?: string | null;
   current_question_id?: number | 0; //random 4 digit number assign to each team to mark their question answer id
   questions_solved?: number | 0;
   has_submitted?: boolean | false;
-  session_count?: number|0;
+  session_count?: number | 0;
 }
 
 // Session Table
-export interface AuthSession{
+export interface AuthSession {
   id?: UUID;
-  team_id:string;
-  created_at?:Date;
-  email?:string;
+  team_id: string;
+  created_at?: Date;
+  email?: string;
 }
 
 // Questions Table
 export interface Question {
   id: number;
   question_text: string;
-  media_image?: string; // URL of image (optional)
-  media_video?: string; // URL of video (optional)
+  media_image?: string[]; // URL of image (optional)
+  media_video?: string[]; // URL of video (optional)
+  media_audio?: string[];
+  hint?: string;
   correct_answer?: string;
   user_answer?: string;
   is_submitted?: boolean;
@@ -55,7 +57,7 @@ export interface SolvedQuestion {
 
 // Leaderboard Table
 export interface Leaderboard {
-  team_id: UUID|"";
+  team_id: UUID | "";
   total_score: number;
   team_name: string;
   rank?: number; // Nullable

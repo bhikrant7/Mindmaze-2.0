@@ -129,6 +129,7 @@ export const useAuthStore = create<AuthState>((set) => ({
       if (typeof window !== "undefined") {
         localStorage.removeItem("supabase.auth.token");
         localStorage.removeItem("auth-team");
+        localStorage.removeItem("question-storage")
       }
       sessionStorage.clear();
 
