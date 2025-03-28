@@ -15,7 +15,7 @@ export default function GamePageLayout({
 
   return (
     <div className="h-screen w-full p-6">
-      <div className="fixed top-5 right-5 md:top-10 md:right-10">
+      <div className="fixed top-5 right-1 md:top-10 md:right-10">
         <StyledWrapper>
           <Button
             onClick={() => navigate("/mainpage")}

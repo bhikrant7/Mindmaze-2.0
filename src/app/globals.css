@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Unkempt:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P');
 
 @import "tailwindcss";
 
@@ -53,6 +53,7 @@
   font-family: "Press Start 2P", system-ui;
   font-weight: 400;
   font-style: normal;
+  letter-spacing: 0.1px;
 }
 
 * {
@@ -135,12 +136,17 @@
   body {
     @apply bg-background text-foreground;
   }
-  html {
-    font-family: var(--font-orbitron), sans-serif;
-    letter-spacing: 1.5px;
-  }
 }
 
+:root {
+  --font-source-code-pro: 'Source Code Pro', monospace;
+  font-family: var(--font-source-code-pro), sans-serif;
+}
+
+body {
+  letter-spacing: .5px;
+  line-height: .1;
+}
 
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
