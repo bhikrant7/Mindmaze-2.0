@@ -36,7 +36,9 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
   try {
     const { data, error } = await supabase
       .from("questions")
-      .select("id,question_text, media_image, media_video, correct_answer")
+      .select(
+        "id,question_text, media_image, media_video,media_audio, correct_answer"
+      )
       .order("id", { ascending: true });
 
     if (error) {
@@ -55,7 +57,7 @@ export async function getSolvedQuestions(
   team_id: UUID | undefined
 ): Promise<Partial<SolvedQuestion>[] | null> {
   try {
-    console.log("getSolvedQuestions : No of times I am accessing:",++count);
+    console.log("getSolvedQuestions : No of times I am accessing:", ++count);
     console.log("team_id: ", team_id);
     const { data, error } = await supabase
       .from("solved_questions")

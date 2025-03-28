@@ -109,7 +109,7 @@ const QuestionCard = () => {
   };
 
   return (
-    <div className="p-6 flex flex-col items-center min-h-screen w-full">
+    <div className="p-6 flex flex-col items-center min-h-screen max-w-lvw">
       <h1 className="flex justify-center press-start-2p-regular text-2xl md:text-5xl font-bold my-10">
         Puzzle {curr_quest?.id}
       </h1>
@@ -117,33 +117,47 @@ const QuestionCard = () => {
       <div className="min-w-fit w-2/3 flex flex-col justify-center text-center items-center p-10 mt-20 space-y-4 sm:space-y-6 bg-gray/10 rounded-2xl border border-orange-400">
         <p className="font-bold text-2xl">{curr_quest?.question_text}</p>
 
-        <div className="flex flex-row flex-wrap lg:flex-nowrap md:overflow-hidden gap-4">
-          {curr_quest?.media_image?.map((img, index) => (
-            <div key={index} className="relative w-[600px] h-[400px]">
-              <Image
-                src={img}
-                alt={`Question media ${index + 1}`}
-                layout="fill"
-                objectFit="contain"
-                className="rounded-lg"
-                priority
-              />
-            </div>
-          ))}
+        <div className="flex flex-row md:flex-col flex-wrap lg:flex-wrap md:overflow-hidden gap-4 space-y-2">
+          <div className="bg-red-700 flex flex-row items-center justify-between max-w-screen">
+            {curr_quest?.media_image?.map((img, index) => (
+              <div key={index} className="relative w-[600px] h-[400px]">
+                <Image
+                  src={img}
+                  alt={`Question media ${index + 1}`}
+                  layout="fill"
+                  objectFit="contain"
+                  className="max-w-[200px] lg:max-w-[600px] rounded-lg"
+                  priority
+                />
+              </div>
+            ))}
+          </div>
 
-          {curr_quest?.media_video?.map((vid, index) => (
-            <video key={index} controls className="mb-4 rounded-lg max-w-full">
-              <source src={vid} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          ))}
+          <div className="bg-yellow-300 flex flex-row items-center justify-center max-w-screen">
+            {curr_quest?.media_video?.map((vid, index) => (
+              <video
+                key={index}
+                controls
+                className="mb-4 rounded-lg max-w-[200px] lg:max-w-[600px]"
+              >
+                <source src={vid} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            ))}
+          </div>
 
-          {curr_quest?.media_audio?.map((audio, index) => (
-            <audio key={index} controls className="mb-4 rounded-lg max-w-full">
-              <source src={audio} type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </audio>
-          ))}
+          <div className="bg-pink-400 flex flex-row items-center justify-center max-w-screen">
+            {curr_quest?.media_audio?.map((audio, index) => (
+              <audio
+                key={index}
+                controls
+                className="mb-4 rounded-lg max-w-[200px] lg:max-w-[600px]"
+              >
+                <source src={audio} type="audio/mpeg" />
+                Your browser does not support the audio element.
+              </audio>
+            ))}
+          </div>
 
           {curr_quest?.id === 7 &&
             !isSolved && // Ensure the question is not solved
