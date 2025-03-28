@@ -25,6 +25,7 @@ export interface AuthSession {
 export interface Question {
   id: number;
   question_text: string;
+  question_description:string;
   media_image?: string[]; // URL of image (optional)
   media_video?: string[]; // URL of video (optional)
   media_audio?: string[];

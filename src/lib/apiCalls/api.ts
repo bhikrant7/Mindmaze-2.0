@@ -9,7 +9,7 @@ export async function getQuestion(id: number): Promise<Question | null> {
   try {
     const { data, error } = await supabase
       .from("questions")
-      .select("id,question_text, media_image, media_video") // Explicitly select the columns you need
+      .select("id,question_text,question_description, media_image, media_video,media_audio") // Explicitly select the columns you need
       .eq("id", id)
       .single();
 
@@ -37,7 +37,7 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
     const { data, error } = await supabase
       .from("questions")
       .select(
-        "id,question_text, media_image, media_video,media_audio, correct_answer"
+        "id,question_text,question_description, media_image, media_video,media_audio, correct_answer,hint"
       )
       .order("id", { ascending: true });
 

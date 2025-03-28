@@ -24,6 +24,7 @@ export const useQuestionStore = create<QuestionState>()(
       curr_quest: {
         id: 0,
         question_text: "",
+        question_description:"",
         media_image: [],
         media_video: [],
         media_audio: [],

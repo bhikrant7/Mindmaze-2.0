@@ -115,7 +115,9 @@ const QuestionCard = () => {
       </h1>
 
       <div className="min-w-fit w-2/3 flex flex-col justify-center text-center items-center p-10 mt-20 space-y-4 sm:space-y-6 bg-gray/10 rounded-2xl border border-orange-400">
-        <p className="font-bold text-2xl">{curr_quest?.question_text}</p>
+        <h1 className="font-bold text-2xl">{curr_quest?.question_text}</h1>
+        <p className="font-bold text-2xl">{curr_quest?.question_description}</p>
+        <p className="font-bold text-2xl">{curr_quest?.hint}</p>
 
         <div className="flex flex-row md:flex-col flex-wrap lg:flex-wrap md:overflow-hidden gap-4 space-y-2">
           <div className="bg-red-700 flex flex-row items-center justify-between max-w-screen">
