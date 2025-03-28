@@ -14,7 +14,7 @@ import {
 
 const URL = "https://www.google.com/";
 
-export function GlobalQuestionHint({ questionId, userAnswer, children }) {
+export function GlobalQuestionHint({ questionId, children }: { questionId: number; children: React.ReactNode }) {
   if (questionId !== 7) {
     return null; // Do not render if conditions aren't met
   }

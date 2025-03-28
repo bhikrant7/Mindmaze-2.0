@@ -167,7 +167,6 @@ const QuestionCard = () => {
             hasSubmitted && ( // Show only after at least one submission attempt
               <GlobalQuestionHint
                 questionId={curr_quest?.id}
-                userAnswer={curr_quest?.user_answer}
               >
                 <Button variant="outline">View Hint</Button>
               </GlobalQuestionHint>
