@@ -4,12 +4,12 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import ClientWrapper from "../components/loaderUI/ClientWrapper";
 // import FetchQuestions from "@/components/FetchQuestions";
-import { Orbitron } from "next/font/google";
+import { Source_Code_Pro } from 'next/font/google';
 
-const orbitron = Orbitron({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"], // Choose weights if needed
-  variable: "--font-orbitron", // Create a CSS variable for the font
+const sourceCodePro = Source_Code_Pro({
+  subsets: ['latin'],
+  weight: ['400', '700', '200'], // Add required weights
+  variable: '--font-source-code-pro', // Define a CSS variable
 });
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning className={orbitron.variable}>
+    <html lang="en" suppressHydrationWarning className={sourceCodePro.variable}>
       <body className="min-h-screen flex flex-col bg-center bg-cover bg-[url('/background.png')]">
         <ThemeProvider
           attribute="class"
