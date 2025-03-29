@@ -109,48 +109,44 @@ const QuestionCard = () => {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen w-full mb-20">
-      <h1 className="text-center text-xl md:text-3xl font-bold mt-10 md:mt-10 press-start-2p-regular leading-loose">
-        {curr_quest?.question_text}
+    <div className="p-6 flex flex-col items-center min-h-screen max-w-lvw">
+      <h1 className="flex leading-15 justify-center press-start-2p-regular  text-2xl md:text-5xl font-bold my-10 text-white">
+        TASK {curr_quest?.id}: {curr_quest?.question_text}
       </h1>
 
-      <div className="w-full max-w-5xl flex flex-col items-center text-center px-2 py-5 sm:p-10 mt-10 md:my-20 space-y-4 sm:space-y-6 bg-transparent rounded-2xl border border-orange-400">
-        <p className="text-sm sm:text-base md:text-xl text-center leading-7 sm:text-center sm:leading-10 px-4 sm:px-10">
+      <div className="min-w-fit w-2/3 flex flex-col justify-center text-center items-center p-10 mt-20 space-y-4 sm:space-y-6 bg-gray/10 rounded-2xl border border-orange-400">
+        {/* <h1 className="font-bold text-2xl text-white">{curr_quest?.question_text}</h1> */}
+        <p className="font-bold text-2xl leading-15 text-white">
           {curr_quest?.question_description}
         </p>
+        <p className="font-bold text-2xl text-[red]">{curr_quest?.hint}</p>
 
         {/* Media Containers */}
-        <div className="flex flex-col w-full">
-          {/* Images */}
-          {(curr_quest?.media_image || []).length > 0 && (
-            <div className=" flex flex-wrap justify-center gap-4">
-              {curr_quest?.media_image?.map((img, index) => (
-                <div
-                  key={index}
-                  className="relative w-full max-w-[300px] md:max-w-[500px] lg:max-w-[600px] h-[200px] md:h-[300px] lg:h-[400px]"
-                >
-                  <Image
-                    src={img}
-                    alt={`Question media ${index + 1}`}
-                    draggable="false"
-                    layout="fill"
-                    objectFit="contain"
-                    className="rounded-lg"
-                    priority
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+        <div className="flex flex-row md:flex-col items-center justify-center max-w-screen lg:flex-wrap md:overflow-hidden gap-4 space-y-2">
+          <div className=" flex  items-center justify-between max-w-screen">
+            {curr_quest?.media_image?.map((img, index) => (
+              <div key={index} className="relative w-[600px] h-[400px]">
+                <Image
+                  src={img}
+                  alt={`Question media ${index + 1}`}
+                  draggable="false"
+                  layout="fill"
+                  objectFit="contain"
+                  className="max-w-[200px] lg:max-w-[600px] rounded-lg"
+                  priority
+                />
+              </div>
+            ))}
+          </div>
 
           {/* Videos */}
           {(curr_quest?.media_video || []).length > 0 && (
-            <div className="p-4 flex flex-wrap justify-center gap-4">
+            <div className="gap-3 flex flex-row items-center justify-center max-w-screen">
               {curr_quest?.media_video?.map((vid, index) => (
                 <video
                   key={index}
                   controls
-                  className="w-full max-w-[250px] lg:max-w-[400px] rounded-lg"
+                  className="mb-4 rounded-lg max-w-[200px] lg:max-w-[600px]"
                 >
                   <source src={vid} type="video/mp4" />
                   Your browser does not support the video tag.
@@ -161,12 +157,12 @@ const QuestionCard = () => {
 
           {/* Audios */}
           {(curr_quest?.media_audio || []).length > 0 && (
-            <div className="p-4 flex flex-wrap justify-center gap-4">
+            <div className=" flex flex-row items-center justify-center max-w-screen">
               {curr_quest?.media_audio?.map((audio, index) => (
                 <audio
                   key={index}
                   controls
-                  className="w-full max-w-[300px] md:max-w-[500px] lg:max-w-[600px] rounded-lg"
+                  className="mb-4 rounded-lg max-w-[200px] lg:max-w-[600px]"
                 >
                   <source src={audio} type="audio/mpeg" />
                   Your browser does not support the audio element.
@@ -181,30 +177,31 @@ const QuestionCard = () => {
           !isSolved &&
           !corr_questions?.some((q) => q.question_id === curr_quest?.id) &&
           hasSubmitted && (
-            <GlobalQuestionHint
-              questionId={curr_quest?.id}
-            >
+            <GlobalQuestionHint questionId={curr_quest?.id}>
               <Button variant="outline">View Hint</Button>
             </GlobalQuestionHint>
           )}
 
-        <p className="font-semibold text-lg sm:text-2xl text-red-600">{curr_quest?.hint}</p>
+        {/* <p className="font-semibold text-lg sm:text-2xl text-red-600">
+          {curr_quest?.hint}
+        </p> */}
 
         {/* Answer Input / Solved Message */}
         {corr_questions?.some((q) => q.question_id === curr_quest?.id) ||
         isSolved ? (
-          <p className="text-green-500 text-3xl font-bold">Solved</p>
+          <p className="text-green-500 text-4xl font-bold">Solved</p>
         ) : (
           <Input
             value={curr_quest?.user_answer || ""}
+            width="30%"
             type="text"
             onChange={(e) => setCurrAnswer(e.target.value)}
             onBlur={(e) => {
               if (e.target.value.trim() === "") {
-                setCurrAnswer("");
+                setCurrAnswer(""); // Ensures no blank spaces are saved
               }
             }}
-            className="w-full max-w-[20rem] py-6 px-4 border border-[#FF9544] focus:ring-[#FF9544] rounded-md dark:bg-zinc-950"
+            className="max-w-[20rem] py-6 ring-offset-[#FF9544] text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544]"
             placeholder="Type your answer here..."
           />
         )}
