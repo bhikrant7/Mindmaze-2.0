@@ -14,8 +14,8 @@ export default function Home() {
       {/* Main Content Area */}
       <div className="flex-grow container mx-auto p-4">
         {/* Your main content goes here */}
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-          MineMaze
+        <h1 className="press-start-2p-regular text-9xl font-bold text-gray-800 flex-col justify-center text-center align-middle dark:text-white">
+          MindMaze
         </h1>
       </div>
     </main>
