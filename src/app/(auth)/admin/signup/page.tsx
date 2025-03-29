@@ -30,12 +30,7 @@ export default function AdminMode() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-      "Team Data:",
-      teamForm.team_name,
-      teamForm.email,
-      teamForm.password,
-      // teamForm.adminKey
-    );
+
 
     // 
     //   "type of key",
