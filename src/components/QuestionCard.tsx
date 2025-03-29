@@ -192,25 +192,23 @@ const QuestionCard = () => {
             <p className="text-sm sm:text-base md:text-3xl text-center leading-7 sm:leading-10 px-4 sm:px-10">
               {curr_quest?.question_description}
             </p>
-            <p className="font-bold text-2xl text-[red]">{curr_quest?.hint}</p>
+            {/* <p className="font-bold text-2xl text-[red]">{curr_quest?.hint}</p> */}
 
             {/* Media Containers */}
-            <div className="flex flex-row md:flex-col items-center justify-center max-w-screen lg:flex-wrap md:overflow-hidden gap-4 space-y-2">
-              <div className=" flex  items-center justify-between max-w-screen">
+            <div className="flex flex-col md:flex-col items-center justify-center max-w-screen lg:flex-wrap md:overflow-hidden gap-4 space-y-2">
                 {curr_quest?.media_image?.map((img, index) => (
-                  <div key={index} className="relative w-[600px] h-[400px]">
+                  <div key={index} className="relative border flex items-center justify-center w-[250px] h-[250px] xl:w-[600px] xl:h-[400px]">
                     <Image
                       src={img}
                       alt={`Question media ${index + 1}`}
                       draggable="false"
                       layout="fill"
                       objectFit="contain"
-                      className="max-w-[200px] lg:max-w-[600px] rounded-lg"
+                      className="lg:max-w-[600px] rounded-lg"
                       priority
                     />
                   </div>
                 ))}
-              </div>
 
               {/* Videos */}
               {(curr_quest?.media_video || []).length > 0 && (
@@ -307,6 +305,8 @@ const QuestionCard = () => {
           )}
       </div>
     </div>
+
+
   );
 };
 

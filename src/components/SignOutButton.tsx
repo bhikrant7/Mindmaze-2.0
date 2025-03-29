@@ -8,7 +8,7 @@ export default function SignOutButton() {
   const { signOut } = useAuthStore();
   const handleSignOut = async () => {
     await signOut().then(() => {
-      console.log("Signed Out successfully");
+      
       toast.success("Signed Out successfully", {
         duration: 10000,
         position: "top-center",

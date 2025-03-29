@@ -29,7 +29,7 @@ export default function AdminMode() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(
+    
       "Team Data:",
       teamForm.team_name,
       teamForm.email,
@@ -37,7 +37,7 @@ export default function AdminMode() {
       // teamForm.adminKey
     );
 
-    // console.log(
+    // 
     //   "type of key",
     //   typeof process.env.NEXT_PUBLIC_ADMIN_KEY,
     //   " and value ",
@@ -45,7 +45,7 @@ export default function AdminMode() {
     // );
 
     if (!teamForm.password || !teamForm.team_name || !teamForm.email) {
-      console.log("Credentials not provided!");
+      
       toast.error("Credentials not provided!", {
         duration: 1000,
         position: "top-center",
@@ -66,7 +66,7 @@ export default function AdminMode() {
     }
 
     if (!teamForm.adminKey) {
-      console.log("No Admin key provided!");
+      
       toast.error("Admin key not provided.", {
         duration: 1000,
         position: "top-center",
@@ -89,7 +89,7 @@ export default function AdminMode() {
     if (
       teamForm.adminKey.trim() !== process.env.NEXT_PUBLIC_ADMIN_KEY?.trim()
     ) {
-      // console.log(
+      // 
       //   "Admin Key from input:", JSON.stringify(teamForm.adminKey),
       //   "Admin Key from ENV:", JSON.stringify(process.env.NEXT_PUBLIC_ADMIN_KEY)
       // );

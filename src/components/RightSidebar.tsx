@@ -22,12 +22,12 @@ const QuestionCard = () => {
     e.preventDefault();
 
     if (!curr_quest || curr_quest.id === undefined) {
-      console.log("No current question available");
+      
       return;
     }
 
     if (!curr_quest.correct_answer) {
-      console.log("No correct answer available");
+      
       return;
     }
 
@@ -88,7 +88,7 @@ const QuestionCard = () => {
         isCorrect,
         team?.team_name as string
       );
-      // console.log("newSubmission: ", newSubmission);
+      // 
       if (newSubmission && isCorrect) {
         setCorrQuest([
           ...(corr_questions ?? []),
@@ -125,7 +125,7 @@ const QuestionCard = () => {
                 <div key={index} className="relative w-[600px] h-[400px]">
                   <Image
                     src={img}
-                    alt={Question media ${index + 1}}
+                    alt={`Question media ${index + 1}`}
                     layout="fill"
                     objectFit="contain"
                     className="max-w-[200px] lg:max-w-[600px] rounded-lg"

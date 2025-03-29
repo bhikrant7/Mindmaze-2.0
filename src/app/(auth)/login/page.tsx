@@ -26,7 +26,7 @@ export default function LoginPage() {
   // handle login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(
+    
       "Team Data:",
       teamForm.team_name,
       teamForm.email,
@@ -65,7 +65,7 @@ export default function LoginPage() {
         });
         return;
       }
-      console.log("Existing team found. Signing in...");
+      
 
       // active sessions for this team
       const { data: activeSessions } = await supabase
@@ -74,7 +74,7 @@ export default function LoginPage() {
         .eq("team_id", existingTeam.id);
 
       if (activeSessions && activeSessions.length >= 1) {
-        console.log(
+        
           "Active session detected. Please log out of there first..."
         );
         toast.error(
@@ -108,7 +108,7 @@ export default function LoginPage() {
       //   .single();
 
       // if (sessionData?.session_count >= 2) {
-      //   console.log("Session limit reached. Blocking login...");
+      //   
       //   toast.warning("Second session detected. Please log out first.", {
       //     autoClose: false,
       //   });
@@ -121,7 +121,7 @@ export default function LoginPage() {
       //   existingTeam.refresh_token &&
       //   existingTeam.refresh_token !== session?.refresh_token
       // ) {
-      //   console.log("Session already exists. Logging out first...");
+      //   
       //   await signOut();
       //   router.replace("/login");
       //   return;
@@ -198,7 +198,7 @@ export default function LoginPage() {
       setSession(newSession.session); // Store the session in Zustand
       setTeam(updatedTeam || existingTeam);
     } else {
-      console.log("No team found. UnAuthorized");
+      
       toast.error(
         "No team name found. Your are unauthorized. If you have registered then please contact Coordinators...",
         {

@@ -38,7 +38,7 @@ export default function QuestionPage({ id }: Props) {
   }, [questionpage, questions, setCurrQuestByIndex]);
 
   // useEffect(() => {
-  //   console.log("questions: ", questions);
+  //   
   // }, [questions]);
   useEffect(() => {
     if (!user && !team) {

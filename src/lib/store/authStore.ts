@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   //         filter: `email=eq.${email}`,
   //       },
   //       async (payload) => {
-  //         console.log("Session change detected:", payload);
+  //         
   //         const { data: sessions, error } = await supabase
   //           .from("sessions")
   //           .select("*")
@@ -87,7 +87,7 @@ export const useAuthStore = create<AuthState>((set) => ({
           filter: `email=eq.${email}`,
         },
         async (payload) => {
-          console.log("Session change detected:", payload);
+          
           const { data: sessions, error } = await supabase
             .from("sessions")
             .select("*")
