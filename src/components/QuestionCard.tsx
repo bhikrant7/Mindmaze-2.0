@@ -143,7 +143,7 @@ const QuestionCard = () => {
 
           {/* Videos */}
           {(curr_quest?.media_video || []).length > 0 && (
-            <div className="px-4 pt-10 flex flex-wrap justify-center gap-4">
+            <div className="p-4 flex flex-wrap justify-center gap-4">
               {curr_quest?.media_video?.map((vid, index) => (
                 <video
                   key={index}
@@ -179,7 +179,6 @@ const QuestionCard = () => {
           !isSolved &&
           !corr_questions?.some((q) => q.question_id === curr_quest?.id) &&
           hasSubmitted && (
-            <GlobalQuestionHint questionId={curr_quest?.id}>
             <GlobalQuestionHint questionId={curr_quest?.id}>
               <Button variant="outline">View Hint</Button>
             </GlobalQuestionHint>
@@ -238,6 +237,5 @@ const QuestionCard = () => {
       </div>
     </div>
   );
-};
-
+}
 export default QuestionCard;
