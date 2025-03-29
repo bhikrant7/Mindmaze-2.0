@@ -26,12 +26,7 @@ export default function LoginPage() {
   // handle login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-      "Team Data:",
-      teamForm.team_name,
-      teamForm.email,
-      teamForm.password
-    );
+
 
     // check if the email exists in the teams table
     const { data: existingTeam } = await supabase
@@ -65,7 +60,7 @@ export default function LoginPage() {
         });
         return;
       }
-      
+    
 
       // active sessions for this team
       const { data: activeSessions } = await supabase
@@ -74,9 +69,7 @@ export default function LoginPage() {
         .eq("team_id", existingTeam.id);
 
       if (activeSessions && activeSessions.length >= 1) {
-        
-          "Active session detected. Please log out of there first..."
-        );
+
         toast.error(
           "Active session detected. Please log out of there first...",
           {
@@ -108,7 +101,7 @@ export default function LoginPage() {
       //   .single();
 
       // if (sessionData?.session_count >= 2) {
-      //   
+      //   console.log("Session limit reached. Blocking login...");
       //   toast.warning("Second session detected. Please log out first.", {
       //     autoClose: false,
       //   });
@@ -121,7 +114,7 @@ export default function LoginPage() {
       //   existingTeam.refresh_token &&
       //   existingTeam.refresh_token !== session?.refresh_token
       // ) {
-      //   
+      //   console.log("Session already exists. Logging out first...");
       //   await signOut();
       //   router.replace("/login");
       //   return;

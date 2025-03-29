@@ -36,7 +36,7 @@ const ScrambleText: React.FC<ScrambleTextProps> = ({ text }) => {
           wordIndex--;
           setTimeout(
             () => scrambleLetter(wordIndex, words[wordIndex]?.length - 1),
-            200
+            150
           );
           return;
         }
@@ -51,7 +51,7 @@ const ScrambleText: React.FC<ScrambleTextProps> = ({ text }) => {
           return newWords;
         });
 
-        setTimeout(() => scrambleStep(step - 1), Math.random() * 200);
+        setTimeout(() => scrambleStep(step - 1), Math.random() * 100);
       }
 
       scrambleStep(charIdx);
@@ -84,12 +84,12 @@ const QuestionCard = () => {
     e.preventDefault();
 
     if (!curr_quest || curr_quest.id === undefined) {
-      console.log("No current question available");
+      
       return;
     }
 
     if (!curr_quest.correct_answer) {
-      console.log("No correct answer available");
+      
       return;
     }
 
