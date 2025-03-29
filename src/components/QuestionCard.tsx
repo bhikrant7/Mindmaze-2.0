@@ -87,12 +87,11 @@ const QuestionCard = () => {
     if (!curr_quest || curr_quest.id === undefined) {
       return;
     }
-    console.log("curr_quest: ", curr_quest);
-    if (curr_quest.id !== 7 && !curr_quest.correct_answer ) {
+
+    if (!curr_quest.correct_answer) {
       return;
     }
-
-    if (curr_quest.id === 7 && curr_quest.user_answer?.trim().length == 0) {
+      if (curr_quest?.user_answer === undefined || curr_quest.user_answer?.trim().length === 0) {
       setShowHint(true);
       toast.error("Enter an Answer", {
         duration: 5000,
@@ -110,7 +109,6 @@ const QuestionCard = () => {
           secondary: "#422d28",
         },
       });
-      
       return;
     }
 
