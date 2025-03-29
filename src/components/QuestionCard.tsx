@@ -110,12 +110,15 @@ const QuestionCard = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen w-full mb-20">
-      <h1 className="text-center text-xl md:text-3xl font-bold mt-10 md:mt-10 press-start-2p-regular leading-loose">
-        {curr_quest?.question_text}
+      <h1 className="text-center flex flex-col text-lg md:text-3xl font-bold mt-10 md:mt-10 press-start-2p-regular leading-loose">
+        <span className="text-orange-500 font-bold py-4 rounded-md shadow-sm text-2xl md:text-4xl">
+          Puzzle {curr_quest?.id}
+        </span>
+        <span>{curr_quest?.question_text}</span>
       </h1>
 
-      <div className="w-full max-w-5xl flex flex-col items-center text-center px-2 py-5 sm:p-10 mt-10 md:my-20 space-y-4 sm:space-y-6 bg-transparent rounded-2xl border border-orange-400">
-        <p className="text-sm sm:text-base md:text-xl text-center leading-7 sm:text-center sm:leading-10 px-4 sm:px-10">
+      <div className="w-full max-w-9xl flex flex-col items-center text-center px-2 py-5 sm:p-10 mt-10 md:my-20 space-y-4 sm:space-y-6 bg-transparent rounded-2xl border border-orange-400">
+        <p className="text-sm sm:text-base md:text-3xl text-center leading-7 sm:leading-10 px-4 sm:px-10">
           {curr_quest?.question_description}
         </p>
 
@@ -145,7 +148,7 @@ const QuestionCard = () => {
 
           {/* Videos */}
           {(curr_quest?.media_video || []).length > 0 && (
-            <div className="p-4 flex flex-wrap justify-center gap-4">
+            <div className="px-4 pt-10 flex flex-wrap justify-center gap-4">
               {curr_quest?.media_video?.map((vid, index) => (
                 <video
                   key={index}
@@ -181,19 +184,19 @@ const QuestionCard = () => {
           !isSolved &&
           !corr_questions?.some((q) => q.question_id === curr_quest?.id) &&
           hasSubmitted && (
-            <GlobalQuestionHint
-              questionId={curr_quest?.id}
-            >
+            <GlobalQuestionHint questionId={curr_quest?.id}>
               <Button variant="outline">View Hint</Button>
             </GlobalQuestionHint>
           )}
 
-        <p className="font-semibold text-lg sm:text-2xl text-red-600">{curr_quest?.hint}</p>
+        <p className="font-semibold text-lg sm:text-2xl text-red-600">
+          {curr_quest?.hint}
+        </p>
 
         {/* Answer Input / Solved Message */}
         {corr_questions?.some((q) => q.question_id === curr_quest?.id) ||
         isSolved ? (
-          <p className="text-green-500 text-3xl font-bold">Solved</p>
+          <p className="text-green-500 text-5xl font-bold">Solved</p>
         ) : (
           <Input
             value={curr_quest?.user_answer || ""}
