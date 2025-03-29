@@ -79,17 +79,16 @@ const QuestionCard = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
   const [isSolved, setIsSolved] = useState<boolean>(false);
+  const [showHint, setShowHint] = useState(false);
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!curr_quest || curr_quest.id === undefined) {
-      
       return;
     }
 
     if (!curr_quest.correct_answer) {
-      
       return;
     }
 
@@ -110,6 +109,7 @@ const QuestionCard = () => {
           secondary: "#422d28",
         },
       });
+      setShowHint(true);
       return;
     }
 
@@ -196,19 +196,22 @@ const QuestionCard = () => {
 
             {/* Media Containers */}
             <div className="flex flex-col md:flex-col items-center justify-center max-w-screen lg:flex-wrap md:overflow-hidden gap-4 space-y-2">
-                {curr_quest?.media_image?.map((img, index) => (
-                  <div key={index} className="relative border flex items-center justify-center w-[250px] h-[250px] xl:w-[600px] xl:h-[400px]">
-                    <Image
-                      src={img}
-                      alt={`Question media ${index + 1}`}
-                      draggable="false"
-                      layout="fill"
-                      objectFit="contain"
-                      className="lg:max-w-[600px] rounded-lg"
-                      priority
-                    />
-                  </div>
-                ))}
+              {curr_quest?.media_image?.map((img, index) => (
+                <div
+                  key={index}
+                  className="relative border flex items-center justify-center w-[250px] h-[250px] xl:w-[600px] xl:h-[400px]"
+                >
+                  <Image
+                    src={img}
+                    alt={`Question media ${index + 1}`}
+                    draggable="false"
+                    layout="fill"
+                    objectFit="contain"
+                    className="lg:max-w-[600px] rounded-lg"
+                    priority
+                  />
+                </div>
+              ))}
 
               {/* Videos */}
               {(curr_quest?.media_video || []).length > 0 && (
@@ -246,7 +249,7 @@ const QuestionCard = () => {
             {curr_quest?.id === 7 &&
               !isSolved &&
               !corr_questions?.some((q) => q.question_id === curr_quest?.id) &&
-              hasSubmitted && (
+              showHint && ( // Show hint only if showHint is true
                 <GlobalQuestionHint questionId={curr_quest?.id}>
                   <Button variant="outline">View Hint</Button>
                 </GlobalQuestionHint>
@@ -305,8 +308,6 @@ const QuestionCard = () => {
           )}
       </div>
     </div>
-
-
   );
 };
 
