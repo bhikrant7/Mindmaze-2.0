@@ -121,30 +121,25 @@ const QuestionCard = () => {
         <p className="text-sm sm:text-base md:text-3xl text-center leading-7 sm:leading-10 px-4 sm:px-10">
           {curr_quest?.question_description}
         </p>
+        <p className="font-bold text-2xl text-[red]">{curr_quest?.hint}</p>
 
         {/* Media Containers */}
-        <div className="flex flex-col w-full">
-          {/* Images */}
-          {(curr_quest?.media_image || []).length > 0 && (
-            <div className=" flex flex-wrap justify-center gap-4">
-              {curr_quest?.media_image?.map((img, index) => (
-                <div
-                  key={index}
-                  className="relative w-full max-w-[300px] md:max-w-[500px] lg:max-w-[600px] h-[200px] md:h-[300px] lg:h-[400px]"
-                >
-                  <Image
-                    src={img}
-                    alt={`Question media ${index + 1}`}
-                    draggable="false"
-                    layout="fill"
-                    objectFit="contain"
-                    className="rounded-lg"
-                    priority
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+        <div className="flex flex-row md:flex-col items-center justify-center max-w-screen lg:flex-wrap md:overflow-hidden gap-4 space-y-2">
+          <div className=" flex  items-center justify-between max-w-screen">
+            {curr_quest?.media_image?.map((img, index) => (
+              <div key={index} className="relative w-[600px] h-[400px]">
+                <Image
+                  src={img}
+                  alt={`Question media ${index + 1}`}
+                  draggable="false"
+                  layout="fill"
+                  objectFit="contain"
+                  className="max-w-[200px] lg:max-w-[600px] rounded-lg"
+                  priority
+                />
+              </div>
+            ))}
+          </div>
 
           {/* Videos */}
           {(curr_quest?.media_video || []).length > 0 && (
@@ -153,7 +148,7 @@ const QuestionCard = () => {
                 <video
                   key={index}
                   controls
-                  className="w-full max-w-[250px] lg:max-w-[400px] rounded-lg"
+                  className="mb-4 rounded-lg max-w-[200px] lg:max-w-[600px]"
                 >
                   <source src={vid} type="video/mp4" />
                   Your browser does not support the video tag.
@@ -164,12 +159,12 @@ const QuestionCard = () => {
 
           {/* Audios */}
           {(curr_quest?.media_audio || []).length > 0 && (
-            <div className="p-4 flex flex-wrap justify-center gap-4">
+            <div className=" flex flex-row items-center justify-center max-w-screen">
               {curr_quest?.media_audio?.map((audio, index) => (
                 <audio
                   key={index}
                   controls
-                  className="w-full max-w-[300px] md:max-w-[500px] lg:max-w-[600px] rounded-lg"
+                  className="mb-4 rounded-lg max-w-[200px] lg:max-w-[600px]"
                 >
                   <source src={audio} type="audio/mpeg" />
                   Your browser does not support the audio element.
@@ -184,6 +179,7 @@ const QuestionCard = () => {
           !isSolved &&
           !corr_questions?.some((q) => q.question_id === curr_quest?.id) &&
           hasSubmitted && (
+            <GlobalQuestionHint questionId={curr_quest?.id}>
             <GlobalQuestionHint questionId={curr_quest?.id}>
               <Button variant="outline">View Hint</Button>
             </GlobalQuestionHint>
@@ -200,14 +196,15 @@ const QuestionCard = () => {
         ) : (
           <Input
             value={curr_quest?.user_answer || ""}
+            width="30%"
             type="text"
             onChange={(e) => setCurrAnswer(e.target.value)}
             onBlur={(e) => {
               if (e.target.value.trim() === "") {
-                setCurrAnswer("");
+                setCurrAnswer(""); // Ensures no blank spaces are saved
               }
             }}
-            className="w-full max-w-[20rem] py-6 px-4 border border-[#FF9544] focus:ring-[#FF9544] rounded-md dark:bg-zinc-950"
+            className="max-w-[20rem] py-6 ring-offset-[#FF9544] text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544]"
             placeholder="Type your answer here..."
           />
         )}
