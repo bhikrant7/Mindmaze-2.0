@@ -93,6 +93,7 @@ const QuestionCard = () => {
     }
 
     if (curr_quest.user_answer?.trim().length == 0) {
+      setShowHint(true);
       toast.error("Enter an Answer", {
         duration: 5000,
         position: "top-center",
@@ -109,7 +110,7 @@ const QuestionCard = () => {
           secondary: "#422d28",
         },
       });
-      setShowHint(true);
+      
       return;
     }
 
