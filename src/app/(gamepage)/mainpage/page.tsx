@@ -47,7 +47,7 @@ export default function Page() {
           {/* Title */}
           <div className="flex justify-center mt-20">
             <h1 className="press-start-2p-regular text-4xl sm:text-5xl md:text-6xl font-bold text-white">
-              PUZZLES
+              MIND MAZE 2.0
             </h1>
           </div>
 
@@ -59,7 +59,7 @@ export default function Page() {
                 onClick={() => navigate(`/question/${index + 1}`)}
                 className="cursor-pointer relative px-3 py-4 sm:px-4 sm:py-6 rounded-md text-white text-lg sm:text-2xl font-semibold shadow-md transition hover:scale-105 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600"
               >
-                Puzzle {index + 1}
+               Task {index + 1}
                 {corr_questions?.some(
                   (q) => q.question_id === questions[index].id
                 ) && (

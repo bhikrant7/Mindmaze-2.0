@@ -1,5 +1,5 @@
 import { UUID } from "@/lib/types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Input } from "./ui/input";
 import { useAuthStore } from "@/lib/store/authStore";
@@ -9,6 +9,68 @@ import { createSubmission } from "@/lib/apiCalls/api";
 import { verifyAnswer } from "@/lib/helpers/common";
 import { toast } from "react-hot-toast";
 import { GlobalQuestionHint } from "./GlobalQuestionHint";
+
+interface ScrambleTextProps {
+  text: string | undefined;
+}
+
+const ScrambleText: React.FC<ScrambleTextProps> = ({ text }) => {
+  const words: string[] = text?.split(" ") || [];
+  const [scrambledWords, setScrambledWords] = useState<string[]>([...words]);
+
+  function getRandomChar(): string {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    return chars[Math.floor(Math.random() * chars.length)];
+  }
+
+  useEffect(() => {
+    if (!text) return;
+    let wordIndex = words.length - 1;
+
+    function scrambleLetter(wordIdx: number, charIdx: number) {
+      if (wordIdx < 0) return;
+      const word = words[wordIdx].split("");
+
+      function scrambleStep(step: number) {
+        if (step < 0) {
+          wordIndex--;
+          setTimeout(
+            () => scrambleLetter(wordIndex, words[wordIndex]?.length - 1),
+            200
+          );
+          return;
+        }
+
+        const newWord = word.map((char, j) =>
+          j >= step ? getRandomChar() : char
+        );
+
+        setScrambledWords((prev) => {
+          const newWords = [...prev];
+          newWords[wordIdx] = newWord.join("");
+          return newWords;
+        });
+
+        setTimeout(() => scrambleStep(step - 1), Math.random() * 200);
+      }
+
+      scrambleStep(charIdx);
+    }
+
+    scrambleLetter(wordIndex, words[wordIndex].length - 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text]);
+
+  if (!text) return;
+
+  return (
+    <div>
+      <p className="font-bold text-2xl text-[red]">
+        HINT : {scrambledWords.join(" ")}
+      </p>
+    </div>
+  );
+};
 
 const QuestionCard = () => {
   const { team } = useAuthStore();
@@ -109,73 +171,96 @@ const QuestionCard = () => {
   };
 
   return (
-    <div className="p-6 flex flex-col items-center min-h-screen max-w-lvw">
-      <h1 className="flex justify-center press-start-2p-regular text-2xl md:text-5xl font-bold my-10">
-        Puzzle {curr_quest?.id}
+    <div className="flex flex-col items-center min-h-screen w-full mb-20">
+      <h1 className="text-center flex flex-col text-lg md:text-3xl font-bold mt-10 md:mt-10 press-start-2p-regular leading-loose">
+        <span className="text-orange-500 font-bold py-4 rounded-md shadow-sm text-2xl md:text-4xl">
+          Task {curr_quest?.id}
+        </span>
+        <span>{curr_quest?.question_text}</span>
       </h1>
 
-      <div className="min-w-fit w-2/3 flex flex-col justify-center text-center items-center p-10 mt-20 space-y-4 sm:space-y-6 bg-gray/10 rounded-2xl border border-orange-400">
-        <h1 className="font-bold text-2xl">{curr_quest?.question_text}</h1>
-        <p className="font-bold text-2xl">{curr_quest?.question_description}</p>
-        <p className="font-bold text-2xl">{curr_quest?.hint}</p>
-
-        <div className="flex flex-row md:flex-col flex-wrap lg:flex-wrap md:overflow-hidden gap-4 space-y-2">
-          <div className="bg-red-700 flex flex-row items-center justify-between max-w-screen">
-            {curr_quest?.media_image?.map((img, index) => (
-              <div key={index} className="relative w-[600px] h-[400px]">
-                <Image
-                  src={img}
-                  alt={`Question media ${index + 1}`}
-                  layout="fill"
-                  objectFit="contain"
-                  className="max-w-[200px] lg:max-w-[600px] rounded-lg"
-                  priority
-                />
-              </div>
-            ))}
+      <div className="w-full max-w-9xl flex flex-col items-center text-center px-2 py-5 sm:p-10 mt-10 md:my-20 space-y-4 sm:space-y-6 bg-transparent rounded-2xl border border-orange-400">
+        {curr_quest?.id === 8 ? (
+          <div>
+            <p className="text-sm sm:text-base md:text-3xl text-center leading-7 sm:leading-10 px-4 sm:px-10">
+              {curr_quest?.question_description}
+            </p>
+            <ScrambleText text={curr_quest?.hint} />
           </div>
+        ) : (
+          <>
+            <p className="text-sm sm:text-base md:text-3xl text-center leading-7 sm:leading-10 px-4 sm:px-10">
+              {curr_quest?.question_description}
+            </p>
+            {/* <p className="font-bold text-2xl text-[red]">{curr_quest?.hint}</p> */}
 
-          <div className="bg-yellow-300 flex flex-row items-center justify-center max-w-screen">
-            {curr_quest?.media_video?.map((vid, index) => (
-              <video
-                key={index}
-                controls
-                className="mb-4 rounded-lg max-w-[200px] lg:max-w-[600px]"
-              >
-                <source src={vid} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            ))}
-          </div>
+            {/* Media Containers */}
+            <div className="flex flex-col md:flex-col items-center justify-center max-w-screen lg:flex-wrap md:overflow-hidden gap-4 space-y-2">
+                {curr_quest?.media_image?.map((img, index) => (
+                  <div key={index} className="relative border flex items-center justify-center w-[250px] h-[250px] xl:w-[600px] xl:h-[400px]">
+                    <Image
+                      src={img}
+                      alt={`Question media ${index + 1}`}
+                      draggable="false"
+                      layout="fill"
+                      objectFit="contain"
+                      className="lg:max-w-[600px] rounded-lg"
+                      priority
+                    />
+                  </div>
+                ))}
 
-          <div className="bg-pink-400 flex flex-row items-center justify-center max-w-screen">
-            {curr_quest?.media_audio?.map((audio, index) => (
-              <audio
-                key={index}
-                controls
-                className="mb-4 rounded-lg max-w-[200px] lg:max-w-[600px]"
-              >
-                <source src={audio} type="audio/mpeg" />
-                Your browser does not support the audio element.
-              </audio>
-            ))}
-          </div>
+              {/* Videos */}
+              {(curr_quest?.media_video || []).length > 0 && (
+                <div className="px-4 pt-10 flex flex-wrap justify-center gap-4">
+                  {curr_quest?.media_video?.map((vid, index) => (
+                    <video
+                      key={index}
+                      controls
+                      className="mb-4 rounded-lg max-w-[200px] lg:max-w-[600px]"
+                    >
+                      <source src={vid} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  ))}
+                </div>
+              )}
 
-          {curr_quest?.id === 7 &&
-            !isSolved && // Ensure the question is not solved
-            !corr_questions?.some((q) => q.question_id === curr_quest?.id) && // Ensure it's not correct
-            hasSubmitted && ( // Show only after at least one submission attempt
-              <GlobalQuestionHint
-                questionId={curr_quest?.id}
-              >
-                <Button variant="outline">View Hint</Button>
-              </GlobalQuestionHint>
-            )}
-        </div>
+              {/* Audios */}
+              {(curr_quest?.media_audio || []).length > 0 && (
+                <div className=" flex flex-row items-center justify-center max-w-screen">
+                  {curr_quest?.media_audio?.map((audio, index) => (
+                    <audio
+                      key={index}
+                      controls
+                      className="mb-4 rounded-lg max-w-[200px] lg:max-w-[600px]"
+                    >
+                      <source src={audio} type="audio/mpeg" />
+                      Your browser does not support the audio element.
+                    </audio>
+                  ))}
+                </div>
+              )}
+            </div>
 
+            {curr_quest?.id === 7 &&
+              !isSolved &&
+              !corr_questions?.some((q) => q.question_id === curr_quest?.id) &&
+              hasSubmitted && (
+                <GlobalQuestionHint questionId={curr_quest?.id}>
+                  <Button variant="outline">View Hint</Button>
+                </GlobalQuestionHint>
+              )}
+
+            <p className="font-semibold text-lg sm:text-2xl text-red-600">
+              {curr_quest?.hint}
+            </p>
+          </>
+        )}
+        {/* Answer Input / Solved Message */}
         {corr_questions?.some((q) => q.question_id === curr_quest?.id) ||
         isSolved ? (
-          <p className="text-green-500 text-4xl font-bold">Solved</p>
+          <p className="text-green-500 text-5xl font-bold">Solved</p>
         ) : (
           <Input
             value={curr_quest?.user_answer || ""}
@@ -187,11 +272,12 @@ const QuestionCard = () => {
                 setCurrAnswer(""); // Ensures no blank spaces are saved
               }
             }}
-            className="max-w-[20rem] py-6 ring-offset-[#FF9544] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544]"
+            className="max-w-[20rem] py-6 ring-offset-[#FF9544] text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544]"
             placeholder="Type your answer here..."
           />
         )}
 
+        {/* Submit Button */}
         {!corr_questions?.some((q) => q.question_id === curr_quest?.id) &&
           !isSolved && (
             <Button
@@ -219,6 +305,8 @@ const QuestionCard = () => {
           )}
       </div>
     </div>
+
+
   );
 };
 
