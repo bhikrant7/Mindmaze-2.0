@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone", // Enables standalone build
   images: {
     remotePatterns: [
       {

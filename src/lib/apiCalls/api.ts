@@ -18,7 +18,7 @@ export async function getQuestion(id: number): Promise<Question | null> {
       return null;
     }
 
-    // console.log("Fetched data:", data); // Debug log to see what we're getting
+    // 
 
     const question = {
       ...data,
@@ -45,7 +45,7 @@ export async function getAllQuestion(): Promise<Partial<Question>[] | null> {
       console.error("Error fetching questions:", error);
       return null;
     }
-    // console.log("Fetched questions:", data);
+    // 
     return data as Partial<Question>[];
   } catch (err) {
     console.error("Error in getting :", err);
@@ -57,8 +57,8 @@ export async function getSolvedQuestions(
   team_id: UUID | undefined
 ): Promise<Partial<SolvedQuestion>[] | null> {
   try {
-    console.log("getSolvedQuestions : No of times I am accessing:", ++count);
-    console.log("team_id: ", team_id);
+    
+    
     const { data, error } = await supabase
       .from("solved_questions")
       .select("*")
@@ -67,7 +67,7 @@ export async function getSolvedQuestions(
     if (error) {
       return null;
     }
-    console.log("data: ", data);
+    
     return data as Partial<SolvedQuestion>[];
   } catch (error) {
     console.error("Error in getting: ", error);
@@ -112,11 +112,11 @@ export const fetchAllQuestions = async () => {
 
     //  Avoid re-fetching if questions are already stored
     if (questions && questions.length > 0) {
-      console.log("Using cached questions from Zustand");
+      
       return;
     }
 
-    console.log("Fetching questions from API...");
+    
     const fetchedQuestions = await getAllQuestion();
 
     const questionsList: Partial<Question>[] =
@@ -130,7 +130,7 @@ export const fetchAllQuestions = async () => {
         };
       }) || [];
 
-    // console.log("questionsList: ", questionsList);
+    // 
     setQuestions(questionsList); //  Store in Zustand (Persists in localStorage)
   } catch (error) {
     console.error("Error fetching questions:", error);

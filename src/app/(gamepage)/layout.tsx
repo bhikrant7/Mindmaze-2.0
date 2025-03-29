@@ -21,11 +21,11 @@ export default function GamePageLayout({
   //     const fetchSolvedQuestions = async () => {
   //       try {
   //         if (corr_questions && corr_questions.length > 0) {
-  //           console.log("Using cached solved questions from Zustand");
+  //           
   //           return; // Avoid unnecessary API call
   //         }
 
-  //         console.log("Fetching solved questions from API...");
+  //         
   //         const solvedQuestions = await getSolvedQuestions(team?.id as UUID);
   //         setCorrQuest(solvedQuestions);
   //       } catch (error) {
@@ -44,11 +44,11 @@ export default function GamePageLayout({
             prevCorrQuestions.current &&
             prevCorrQuestions.current.length > 0
           ) {
-            console.log("Using cached solved questions from Zustand");
+            
             return;
           }
 
-          console.log("Fetching solved questions from API...");
+          
           const solvedQuestions = await getSolvedQuestions(team?.id as UUID);
           setCorrQuest(solvedQuestions);
           prevCorrQuestions.current = solvedQuestions; // Update ref

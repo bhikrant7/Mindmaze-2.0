@@ -3,12 +3,13 @@ version: "3.8"
 services:
   nextjs:
     build: .
-    command : npm run dev
+    command: npm run start
     container_name: nextjs_app
     restart: always
     ports:
       - "80:3000"
     environment:
+      - NODE_ENV=production
       - NEXT_PUBLIC_SUPABASE_URL=https://ownmtacmeyglmfaoieaq.supabase.co
       - NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93bm10YWNtZXlnbG1mYW9pZWFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDE5Mzc2MDIsImV4cCI6MjA1NzUxMzYwMn0.ZTyyjPHg901TqUloz_fgaNSqc_4CZzvJbdw1AkN7C9w
       - NEXT_PUBLIC_ADMIN_KEY=dcodeallstars7
@@ -20,8 +21,8 @@ services:
     container_name: duckdns
     restart: always
     environment:
-      - SUBDOMAINS=your-subdomain
-      - TOKEN=your-duckdns-token
+      - SUBDOMAINS=mindmaze.duckdns.org
+      - TOKEN=4b02543a-bf37-43f3-b705-e896770366bd
     networks:
       - app_network
 

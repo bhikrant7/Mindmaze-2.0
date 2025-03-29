@@ -64,10 +64,10 @@ async function seedTeams() {
           continue;
         }
   
-        console.log(`✅ Successfully seeded ${team.team_name} (${authData.user.id})`);
+        
       }
       
-      console.log('🎉 Seeding completed!');
+      
       process.exit(0);
     } catch (error) {
       console.error('❌ Unexpected error:', error);

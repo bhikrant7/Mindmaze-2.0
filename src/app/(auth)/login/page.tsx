@@ -26,12 +26,7 @@ export default function LoginPage() {
   // handle login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(
-      "Team Data:",
-      teamForm.team_name,
-      teamForm.email,
-      teamForm.password
-    );
+
 
     // check if the email exists in the teams table
     const { data: existingTeam } = await supabase
@@ -65,7 +60,7 @@ export default function LoginPage() {
         });
         return;
       }
-      console.log("Existing team found. Signing in...");
+    
 
       // active sessions for this team
       const { data: activeSessions } = await supabase
@@ -74,9 +69,7 @@ export default function LoginPage() {
         .eq("team_id", existingTeam.id);
 
       if (activeSessions && activeSessions.length >= 1) {
-        console.log(
-          "Active session detected. Please log out of there first..."
-        );
+
         toast.error(
           "Active session detected. Please log out of there first...",
           {
@@ -198,7 +191,7 @@ export default function LoginPage() {
       setSession(newSession.session); // Store the session in Zustand
       setTeam(updatedTeam || existingTeam);
     } else {
-      console.log("No team found. UnAuthorized");
+      
       toast.error(
         "No team name found. Your are unauthorized. If you have registered then please contact Coordinators...",
         {

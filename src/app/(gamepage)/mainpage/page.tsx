@@ -26,7 +26,7 @@ export default function Page() {
   //   });
   // };
 
-  // console.log("corr_questions: ", corr_questions);
+  // 
 
   useEffect(() => {
     if (!user) {
@@ -59,7 +59,7 @@ export default function Page() {
                 onClick={() => navigate(`/question/${index + 1}`)}
                 className="cursor-pointer relative px-3 py-4 sm:px-4 sm:py-6 rounded-md text-white text-lg sm:text-2xl font-semibold shadow-md transition hover:scale-105 flex items-center justify-center gap-2 bg-gradient-to-r from-orange-400 to-orange-600"
               >
-               Task {index + 1}
+                Task {index + 1}
                 {corr_questions?.some(
                   (q) => q.question_id === questions[index].id
                 ) && (
