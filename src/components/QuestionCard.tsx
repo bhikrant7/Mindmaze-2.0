@@ -66,7 +66,7 @@ const ScrambleText: React.FC<ScrambleTextProps> = ({ text }) => {
   return (
     <div>
       <p className="font-bold text-2xl text-[red]">
-        HINT : {scrambledWords.join(" ")}
+        {scrambledWords.join(" ")}
       </p>
     </div>
   );
@@ -175,13 +175,13 @@ const QuestionCard = () => {
         <span className="text-orange-500 font-bold py-4 rounded-md shadow-sm text-2xl md:text-4xl">
           Task {curr_quest?.id}
         </span>
-        <span>{curr_quest?.question_text}</span>
+        <span className="text-white">{curr_quest?.question_text}</span>
       </h1>
 
       <div className="w-full max-w-9xl flex flex-col items-center text-center px-2 py-5 sm:p-10 mt-10 md:my-20 space-y-4 sm:space-y-6 bg-transparent rounded-2xl border border-orange-400">
         {curr_quest?.id === 8 ? (
           <div>
-            <p className="text-sm sm:text-base md:text-3xl text-center leading-7 sm:leading-10 px-4 sm:px-10">
+            <p className="text-sm sm:text-base md:text-3xl text-center leading-7 sm:leading-10 px-4 sm:px-10 text-white">
               {curr_quest?.question_description}
             </p>
             <ScrambleText text={curr_quest?.hint} />
@@ -274,7 +274,7 @@ const QuestionCard = () => {
                 setCurrAnswer(""); // Ensures no blank spaces are saved
               }
             }}
-            className="max-w-[20rem] py-6 ring-offset-[#FF9544] text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544]"
+            className="max-w-[20rem] py-6 ring-offset-[#FF9544] text-white dark:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544]"
             placeholder="Type your answer here..."
           />
         )}
