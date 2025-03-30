@@ -16,15 +16,15 @@ services:
     networks:
       - app_network
 
-  duckdns:
-    image: linuxserver/duckdns
-    container_name: duckdns
-    restart: always
-    environment:
-      - SUBDOMAINS=mindmaze.duckdns.org
-      - TOKEN=4b02543a-bf37-43f3-b705-e896770366bd
-    networks:
-      - app_network
+  # duckdns:
+  #   image: linuxserver/duckdns
+  #   container_name: duckdns
+  #   restart: always
+  #   environment:
+  #     - SUBDOMAINS=mindmaze.duckdns.org
+  #     - TOKEN=4b02543a-bf37-43f3-b705-e896770366bd
+  #   networks:
+  #     - app_network
 
 networks:
   app_network:
