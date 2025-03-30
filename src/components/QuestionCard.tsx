@@ -274,7 +274,7 @@ const QuestionCard = () => {
                 setCurrAnswer(""); // Ensures no blank spaces are saved
               }
             }}
-            className="max-w-[20rem] py-6 ring-offset-[#FF9544] text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544] text-white"
+            className="max-w-[20rem] py-6 ring-offset-[#FF9544] text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544]"
             placeholder="Type your answer here..."
           />
         )}
