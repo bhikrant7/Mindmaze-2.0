@@ -10,8 +10,25 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { supabase } from "@/lib/supabaseClient";
 import { LeaderboardEntry } from "./Leaderboard";
+
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+
+let supabase: SupabaseClient | null = null;
+
+export function getSupabaseClient() {
+  if (supabase) return supabase;
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
+
+  if (!url || !anonKey) {
+    throw new Error("Supabase env vars are missing");
+  }
+
+  supabase = createClient(url, anonKey);
+  return supabase;
+}
 
 export default function LeaderBoardPage({
   serverStats,
@@ -24,7 +41,8 @@ export default function LeaderBoardPage({
   const teamsWithFireworks = useRef<Set<number>>(new Set()); // Track teams that triggered fireworks
 
   useEffect(() => {
-    const channel = supabase
+    const supabaseClient = getSupabaseClient();
+    const channel = supabaseClient
       .channel("realtime_stats")
       .on(
         "postgres_changes",
@@ -58,7 +76,7 @@ export default function LeaderBoardPage({
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      supabaseClient.removeChannel(channel);
     };
   }, []);
 

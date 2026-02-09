@@ -11,7 +11,7 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_SUPABASE_URL=https://nsaelmgrsgpafxalwrge.supabase.co
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_p2bpFo9d_GnUeIyz8U7a8A_XFD82PFC
+      - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=sb_publishable_p2bpFo9d_GnUeIyz8U7a8A_XFD82PFC
       - NEXT_PUBLIC_ADMIN_KEY=dcodeallstars7
     networks:
       - app_network
