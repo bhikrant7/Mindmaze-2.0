@@ -52,15 +52,9 @@ The platform successfully handled **~7,000 real-time submissions** during a live
 
 * Handled ~7,000 submissions during a single live event
 * Low-latency leaderboard updates
+* Single session per user at a time
 * Stable performance under high concurrency
 
 ---
 
-## 🔮 Future Improvements
-
-* Admin dashboard for live quiz control
-* Advanced analytics and reporting
-* AI-assisted difficulty scaling
-
----
 
