@@ -426,7 +426,7 @@ export default function LoginPage() {
 
         <div className="text-center">
           <div className="text-xs sm:text-sm mb-3 text-white hover:underline hover:[text-underline-offset:3px]">
-            Forgot password? Shout for Chinmoy Borah
+            Forgot password? Call Admins!
           </div>
         </div>
       </div>
