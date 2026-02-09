@@ -66,7 +66,7 @@ const ScrambleText: React.FC<ScrambleTextProps> = ({ text }) => {
   return (
     <div>
       <p className="font-bold text-2xl text-[red]">
-        HINT : {scrambledWords.join(" ")}
+        {scrambledWords.join(" ")}
       </p>
     </div>
   );
@@ -79,21 +79,20 @@ const QuestionCard = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
   const [isSolved, setIsSolved] = useState<boolean>(false);
+  const [showHint, setShowHint] = useState(false);
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (!curr_quest || curr_quest.id === undefined) {
-      
       return;
     }
 
     if (!curr_quest.correct_answer) {
-      
       return;
     }
-
-    if (curr_quest.user_answer?.trim().length == 0) {
+      if (curr_quest?.user_answer === undefined || curr_quest.user_answer?.trim().length === 0) {
+      setShowHint(true);
       toast.error("Enter an Answer", {
         duration: 5000,
         position: "top-center",
@@ -176,13 +175,13 @@ const QuestionCard = () => {
         <span className="text-orange-500 font-bold py-4 rounded-md shadow-sm text-2xl md:text-4xl">
           Task {curr_quest?.id}
         </span>
-        <span>{curr_quest?.question_text}</span>
+        <span className="text-white">{curr_quest?.question_text}</span>
       </h1>
 
       <div className="w-full max-w-9xl flex flex-col items-center text-center px-2 py-5 sm:p-10 mt-10 md:my-20 space-y-4 sm:space-y-6 bg-transparent rounded-2xl border border-orange-400">
         {curr_quest?.id === 8 ? (
           <div>
-            <p className="text-sm sm:text-base md:text-3xl text-center leading-7 sm:leading-10 px-4 sm:px-10">
+            <p className="text-sm sm:text-base md:text-3xl text-center leading-7 sm:leading-10 px-4 sm:px-10 text-white">
               {curr_quest?.question_description}
             </p>
             <ScrambleText text={curr_quest?.hint} />
@@ -196,19 +195,22 @@ const QuestionCard = () => {
 
             {/* Media Containers */}
             <div className="flex flex-col md:flex-col items-center justify-center max-w-screen lg:flex-wrap md:overflow-hidden gap-4 space-y-2">
-                {curr_quest?.media_image?.map((img, index) => (
-                  <div key={index} className="relative border flex items-center justify-center w-[250px] h-[250px] xl:w-[600px] xl:h-[400px]">
-                    <Image
-                      src={img}
-                      alt={`Question media ${index + 1}`}
-                      draggable="false"
-                      layout="fill"
-                      objectFit="contain"
-                      className="lg:max-w-[600px] rounded-lg"
-                      priority
-                    />
-                  </div>
-                ))}
+              {curr_quest?.media_image?.map((img, index) => (
+                <div
+                  key={index}
+                  className="relative border flex items-center justify-center w-[250px] h-[250px] xl:w-[600px] xl:h-[400px]"
+                >
+                  <Image
+                    src={img}
+                    alt={`Question media ${index + 1}`}
+                    draggable="false"
+                    layout="fill"
+                    objectFit="contain"
+                    className="lg:max-w-[600px] rounded-lg"
+                    priority
+                  />
+                </div>
+              ))}
 
               {/* Videos */}
               {(curr_quest?.media_video || []).length > 0 && (
@@ -246,7 +248,7 @@ const QuestionCard = () => {
             {curr_quest?.id === 7 &&
               !isSolved &&
               !corr_questions?.some((q) => q.question_id === curr_quest?.id) &&
-              hasSubmitted && (
+              showHint && ( // Show hint only if showHint is true
                 <GlobalQuestionHint questionId={curr_quest?.id}>
                   <Button variant="outline">View Hint</Button>
                 </GlobalQuestionHint>
@@ -272,7 +274,7 @@ const QuestionCard = () => {
                 setCurrAnswer(""); // Ensures no blank spaces are saved
               }
             }}
-            className="max-w-[20rem] py-6 ring-offset-[#FF9544] text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544]"
+            className="max-w-[20rem] py-6 ring-offset-[#FF9544] text-white dark:text-white focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#FF9544] focus-visible:ring-offset-2 dark:bg-zinc-950 border border-[#FF9544] focus:border-[#FF9544]"
             placeholder="Type your answer here..."
           />
         )}
@@ -305,8 +307,6 @@ const QuestionCard = () => {
           )}
       </div>
     </div>
-
-
   );
 };
 
