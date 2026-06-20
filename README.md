@@ -96,7 +96,7 @@ graph TD
     end
 
     subgraph Server [Next.js Route Handlers]
-        CreateUser[/api/admin/create-user]
+        CreateUser["/api/admin/create-user"]
     end
 
     subgraph Supabase [Supabase Backend]
