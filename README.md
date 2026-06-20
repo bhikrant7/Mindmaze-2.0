@@ -5,6 +5,7 @@ MindMaze 2.0 is a production-grade, highly engaging **real-time quiz and puzzle 
 
 During a live event, the platform successfully orchestrated and handled **~7,000 real-time submissions** with perfect uptime and fluid visual feedback.
 
+Access it here at https://mindmaze-2-0-2.onrender.com/
 ---
 
 ## 🚀 Tech Stack
