@@ -16,7 +16,11 @@ const supabaseAdmin = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body = (await req.json()) as {
+      email: string;
+      password: string;
+      team_name: string;
+    };
     const { email, password, team_name } = body;
     if (!email || !password || !team_name) {
       return NextResponse.json(
@@ -54,7 +58,7 @@ export async function POST(req: Request) {
     // Hash password before storing in teams table (never store plaintext)
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const insertPayload: any = {
+    const insertPayload = {
       id: createdUserId,
       team_name,
       email,
