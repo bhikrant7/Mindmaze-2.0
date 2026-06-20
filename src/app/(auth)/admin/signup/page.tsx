@@ -29,10 +29,8 @@ export default function AdminMode() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
 
-
-    // 
+    //
     //   "type of key",
     //   typeof process.env.NEXT_PUBLIC_ADMIN_KEY,
     //   " and value ",
@@ -40,7 +38,6 @@ export default function AdminMode() {
     // );
 
     if (!teamForm.password || !teamForm.team_name || !teamForm.email) {
-      
       toast.error("Credentials not provided!", {
         duration: 1000,
         position: "top-center",
@@ -61,7 +58,6 @@ export default function AdminMode() {
     }
 
     if (!teamForm.adminKey) {
-      
       toast.error("Admin key not provided.", {
         duration: 1000,
         position: "top-center",
@@ -84,7 +80,7 @@ export default function AdminMode() {
     if (
       teamForm.adminKey.trim() !== process.env.NEXT_PUBLIC_ADMIN_KEY?.trim()
     ) {
-      // 
+      //
       //   "Admin Key from input:", JSON.stringify(teamForm.adminKey),
       //   "Admin Key from ENV:", JSON.stringify(process.env.NEXT_PUBLIC_ADMIN_KEY)
       // );
@@ -162,54 +158,47 @@ export default function AdminMode() {
       return;
     }
 
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email: teamForm.email,
-      password: teamForm.password,
-    });
+    try {
+      const res = await fetch("/api/admin/create-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: teamForm.email,
+          password: teamForm.password,
+          team_name: teamForm.team_name,
+        }),
+      });
 
-    if (authError) {
-      console.error("Sign up error:", authError.message);
+      const payload = await res.json();
+      if (!res.ok) {
+        console.error("Sign up error:", payload);
+        toast.error(payload.error || "Signup failed", { duration: 5000 });
+        return;
+      }
+
+      toast.success("Registered successfully", {
+        duration: 10000,
+        position: "top-center",
+        style: {
+          background: "rgba(19, 12, 28, 0.15)",
+          border: "1px solid #00AB66",
+          color: "#00AB66",
+          padding: "12px 16px",
+          borderRadius: "8px",
+          backdropFilter: "blur(8px)",
+        },
+        iconTheme: {
+          primary: "#00AB66",
+          secondary: "#FFFFFF",
+        },
+      });
+
+      router.refresh();
+    } catch (err) {
+      console.error("Admin signup failed:", err);
+      toast.error("Signup failed", { duration: 5000 });
       return;
     }
-
-    // new team into teams
-    const { error: insertError } = await supabase.from("teams").insert([
-      {
-        team_name: teamForm.team_name,
-        email: teamForm.email,
-        password: teamForm.password,
-        current_question_id: 0,
-        questions_solved: 0,
-        has_submitted: false,
-        refresh_token: authData.session?.refresh_token,
-        // session_count: 1, // Set initial session count
-      },
-    ]);
-    //   .select()
-    //   .single();
-    if (insertError) {
-      console.error("Error inserting team:", insertError.message);
-      return;
-    }
-
-    toast.success("Registered successfully", {
-      duration: 10000,
-      position: "top-center",
-      style: {
-        background: "rgba(19, 12, 28, 0.15)",
-        border: "1px solid #00AB66",
-        color: "#00AB66",
-        padding: "12px 16px",
-        borderRadius: "8px",
-        backdropFilter: "blur(8px)",
-      },
-      iconTheme: {
-        primary: "#00AB66",
-        secondary: "#FFFFFF",
-      },
-    });
-    //successful signup
-    router.refresh();
   };
 
   // handle form input changes
